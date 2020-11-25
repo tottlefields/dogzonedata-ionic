@@ -1,0 +1,27 @@
+<ion-header *ngIf="dog | async as d; else loading">
+  <ion-toolbar class="ion-color" [style.background-color]="d.color" [style.color]="d.colorText">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="leftMenu"></ion-menu-button>
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <!--<ion-avatar [style.background-color]="dog.color">
+        <ion-img [src]="dog.imageUrl"></ion-img>
+      </ion-avatar>-->{{ d.name }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/dzd/dogs/edit/', d.id]">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+    </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-template #loading>Loading Data...</ng-template>
+  <ion-list>
+    <ion-item *ngFor="let w of weights | async">
+      <ion-label><h2>{{ w.weight | number: '1.2-2' }}kg</h2><p>{{ w.date.toDate() | date: 'dd MMMM yyyy' }}</p></ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

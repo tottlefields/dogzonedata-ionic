@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Daily Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  <ion-slides pager="true" [options]="slideOpts" #foodSlider>
+    <ion-slide *ngFor="let day of daysOfWeek">
+      <ion-card color="light" class="ion-margin"><h2>{{day}}</h2></ion-card>
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>
+

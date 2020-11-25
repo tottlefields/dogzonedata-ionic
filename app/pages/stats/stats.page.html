@@ -1,0 +1,91 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Statistics
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-segment [(ngModel)]="stats">
+    <ion-segment-button value="weights">Weights</ion-segment-button>
+    <ion-segment-button value="measurements">Measurements</ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="stats">
+    <div [hidden]="stats != 'weights'" >
+    <ion-card>
+        <ion-card-header>
+          <ion-card-subtitle>Weights over the last 6 months</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content class="ion-padding-horizontal">
+          <div class="chart-container" style="height:40vh;">
+            <canvas #lineChart></canvas>
+        </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-list class="ion-padding-end">
+        <ion-item *ngFor="let dog of authService.dogs | async" >
+          <ion-avatar class="dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color" slot="start">
+            <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl"></ion-img>
+            <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png"></ion-img></ng-template>
+          </ion-avatar>
+          <ion-label>
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col class="ion-hide-sm-down">
+                  <h2 class="ion-text-uppercase" [style.color]="dog.color"><strong>{{ dog.name }}</strong></h2>
+                  <!--<a [routerLink]="['/dzd/dogs/', dog.id]" routerDirection="forward">
+                    <h2 class="ion-text-uppercase" [style.color]="dog.color"><strong>{{ dog.name }}</strong></h2>
+                  </a>-->
+                </ion-col>
+                <ion-col class="ion-text-center" *ngIf="dog.prevWeight && dog.currWeight">
+                  <ion-label>
+                    <h2>{{ dog.prevWeight.weight | number: '1.2-2' }}kg</h2>
+                    <p>{{ dog.prevWeight.date.toDate() | date: "MMM d" }}</p>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center" *ngIf="dog.prevWeight && dog.currWeight; else elseBlock">
+                  <span>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight > 0" color="danger">
+                      <p><ion-icon name="arrow-up-outline"></ion-icon><span class="ion-hide-lg-down">{{ dog.currWeight.weight - dog.prevWeight.weight | number: '1.2-2' }}kg</span></p>
+                    </ion-label>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight < 0" color="success">
+                      <p><ion-icon name="arrow-down-outline"></ion-icon><span class="ion-hide-lg-down">{{ dog.prevWeight.weight - dog.currWeight.weight | number: '1.2-2' }}kg</span></p>
+                    </ion-label>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight == 0">
+                      <p><ion-icon name="reorder-two-outline"></ion-icon></p>
+                    </ion-label>
+                  </span>
+                </ion-col>
+                <ion-col class="ion-text-center" *ngIf="dog.prevWeight && dog.currWeight">
+                  <ion-label>
+                    <h2>{{ dog.currWeight.weight | number: '1.2-2' }}kg</h2>
+                    <p>{{ dog.currWeight.date.toDate() | date: "MMM d" }}</p>
+                  </ion-label>
+                </ion-col>
+                <ng-template #elseBlock>
+                  <ion-col class="ion-text-center" size-sm="9">
+                    <ion-label class="ion-text-wrap"><p>Not enough weights currently recorded for this dog.</p></ion-label>
+                  </ion-col>
+                </ng-template>
+              </ion-row>
+            </ion-grid>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+    
+    <div [hidden]="stats != 'measurements'" >Measurements</div>
+
+  </div>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="onShowAddWeightModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

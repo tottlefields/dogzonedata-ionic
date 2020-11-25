@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Record a Dog's Weight</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+<form #weightForm="ngForm"> 
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Dog</ion-label>
+          <ion-select interface="popover" ngModel name="dog" required>
+            <ion-select-option *ngFor="let dog of authService.dogs | async" [value]="dog">{{ dog.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Date</ion-label>
+          <ion-datetime name="date" [(ngModel)]="today" required></ion-datetime>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>Weight</ion-label>
+          <ion-input type="decimal" ngModel name="weight" class="ion-text-right ion-margin-end" placeholder="0.00" required></ion-input>
+          <ion-label color="medium">kg</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button type="button" expand="block" (click)="onCancel()" color="danger">Cancel</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button type="submit" expand="block" (click)="onAddWeight(weightForm)" [disabled]="!weightForm.valid">Add Weight</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  </form>
+</ion-content>

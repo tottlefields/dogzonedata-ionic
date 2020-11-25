@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Add a New Dog</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <form #dogForm="ngForm"> 
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" autocomplete="false" ngModel name="name" required></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Sex</ion-label>
+            <ion-select interface="popover" ngModel name="sex">
+              <ion-select-option value="Dog">Dog</ion-select-option>
+              <ion-select-option value="Bitch">Bitch</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Breed</ion-label>
+            <ion-input type="text" autocomplete autocorrect ngModel name="breed" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Date of Birth</ion-label>
+            <ion-datetime ngModel name="dateOfBirth" required></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="ion-align-items-center">
+        <ion-col size="10">
+          <ion-item>
+            <ion-label position="floating">Signature Colour</ion-label>
+            <ion-select name="dogColor" (ionChange)="changeDogColor($event)" interface="popover" ngModel name="color">
+              <ion-select-option value="#008000">Green</ion-select-option>
+              <ion-select-option value="#32CD32">Lime Green</ion-select-option>
+              <ion-select-option value="#FFEF00">Yellow</ion-select-option>
+              <ion-select-option value="#FFA500">Orange</ion-select-option>
+              <ion-select-option value="#FF0000">Red</ion-select-option>            
+              <ion-select-option value="#800000">Maroon</ion-select-option>
+              <ion-select-option value="#FF00FF">Magenta</ion-select-option>
+              <ion-select-option value="#FFC0CB">Pink</ion-select-option>
+              <ion-select-option value="#D8BFD8">Lilac</ion-select-option>
+              <ion-select-option value="#663399">Purple</ion-select-option>
+              <ion-select-option value="#0000FF">Blue</ion-select-option>
+              <ion-select-option value="#00CED1">Turquoise</ion-select-option>
+              <ion-select-option value="#87CEEB">Sky Blue</ion-select-option>,
+              <!-- <ion-select-option value="#D3D3D3">Light Grey</ion-select-option>
+              <ion-select-option value="#A9A9A9">Dark Grey</ion-select-option> -->
+              <ion-select-option value="#A9A9A9">Grey</ion-select-option>
+              <ion-select-option value="#000000">Black</ion-select-option>
+              <!-- <ion-select-option value="#8B4513">SaddleBrown</ion-select-option> -->
+              <!-- <ion-select-option value="#CD853F">Peru</ion-select-option> -->
+              <ion-select-option value="#A0522D">Brown</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="2" style="display: flex; justify-content: center" class="ion-padding-top">
+          <ion-avatar class="ion-float-right dogAvatar" [style.border-color]="dogColor" [style.background-color]="dogColor">
+            <ion-img src="../../assets/img/generic-paw.png" width="50px" height="50px"></ion-img>
+          </ion-avatar>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" expand="block" (click)="onCancel()" color="danger">Cancel</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button type="submit" expand="block" (click)="onAddDog(dogForm)" [disabled]="!dogForm.valid">Add Dog</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </form>
+</ion-content>
