@@ -1,2 +1,2 @@
-# dogzonedata-ionic
-Ionic App project for DogZoneData
+# DogDoneData Ionic
+Ionic App (https://ionicframework.com) project for DogZoneData
