@@ -4,6 +4,8 @@ import { DogWeight } from '../models/dog-weight.interface';
 import { Dog } from '../models/dog.interface';
 import * as moment from 'moment';
 import { DogWeight2 } from '../models/dog-weight2.interface';
+import { map, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +15,26 @@ export class DogsService {
   constructor(public afStore: AngularFirestore) { }
 
   getDogList(uid: string): AngularFirestoreCollection<Dog> {
-    return this.afStore.collection('dogs', ref => ref.where('uid', '==', uid).orderBy('dob'));
+    return this.afStore.collection('dogs', ref => ref.where('uid', '==', uid).where('isRemoved', '==', false).orderBy('dob'));
   }
 
   getDog(dogId: string): AngularFirestoreDocument<Dog> {
     return this.afStore.collection('dogs').doc(dogId);
   }
 
+  getIdea(dogId: string): Observable<Dog> {
+    return this.afStore.collection('dogs').doc<Dog>(dogId).valueChanges().pipe(
+      take(1),
+      map(dog => {
+        // idea.id = id;
+        return dog;
+      })
+    );
+  }
+
   addWeightRecord(uid: string, dogId: string, date: Date, weight: number, name: string, color: string): Promise<void> {
     const id = this.afStore.createId();
-    this.afStore.collection('weights/').add({ date: date, weight: weight, uid: uid, dog: dogId, label: name, borderColor: color });
+    this.afStore.collection('weights/').add({ date: date, weight: weight, uid: uid, dog: dogId, label: name, borderColor: color, validDog: true });
     return this.afStore.doc('dogs/' + dogId + '/weights/' + id).set({ date, weight });
   }
 
@@ -44,26 +56,28 @@ export class DogsService {
   }
 
   getChartData(uid: string): AngularFirestoreCollection<DogWeight2> {
-    return this.afStore.collection('weights', ref => ref.where('uid', '==', uid)
+    return this.afStore.collection('weights', ref => ref.where('uid', '==', uid).where('validDog', '==', true)
     .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
   }
 
   createDog(
     uid: string,
     name: string,
+    kc_name: string,
     breed: string,
     color: string,
     // imageUrl: string,
     dob: Date,
-    sex: string
+    sex: string,
   ): Promise<void> {
     const id = this.afStore.createId();
     const colorText = '#FFFFFF';
+    const isRemoved = false;
 
     console.log(id, name, breed, color, dob, colorText, uid, sex);
 
     return this.afStore.doc('dogs/' + id).set({
-      id, name, breed, color, dob, colorText, uid, sex
+      id, name, kc_name, breed, color, dob, colorText, uid, sex, isRemoved
     });
   }
 }

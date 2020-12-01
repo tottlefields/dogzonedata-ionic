@@ -14,14 +14,10 @@ const routes: Routes = [
   },*/
   {
     path: 'auth',
-    // canActivate: [AngularFireAuthGuard],
-    // data: { authGuardPipe: redirectLoggedInToDZD },
     loadChildren: () => import('./pages/auth/auth.module').then( m => m.AuthPageModule)
   },
   {
     path: 'dzd',
-    // canActivate: [AngularFireAuthGuard],
-    // data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadChildren: () => import('./pages/dzd/dzd.module').then( m => m.DzdPageModule),
     canLoad: [AuthGuard]
   }

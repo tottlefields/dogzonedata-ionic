@@ -8,15 +8,19 @@ import { DogsPageRoutingModule } from './dogs-routing.module';
 
 import { DogsPage } from './dogs.page';
 import { AddDogComponent } from './add-dog/add-dog.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ImagePickerComponent } from 'src/app/shared/pickers/image-picker/image-picker.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DogsPageRoutingModule
+    DogsPageRoutingModule,
+    SharedModule,
+ //   ImagePickerComponent
   ],
   declarations: [DogsPage, AddDogComponent],
-  entryComponents: [AddDogComponent]
+  entryComponents: [AddDogComponent, ImagePickerComponent]
 })
 export class DogsPageModule {}

@@ -46,6 +46,7 @@ export class DogsPage implements OnInit {
         if (resultData.role === 'addDog') {
           const name = this.formData.value.name;
           const breed = this.formData.value.breed;
+          const kc_name = this.formData.value.kc_name;
           const color = this.formData.value.color;
           const dob = new Date(this.formData.value.dateOfBirth);
           const sex = this.formData.value.sex;
@@ -54,7 +55,7 @@ export class DogsPage implements OnInit {
             message: 'Adding dog...'
           });
 
-          this.dogsService.createDog(this.authService.currentUser.uid, name, breed, color, dob, sex)
+          this.dogsService.createDog(this.authService.currentUser.uid, name, kc_name, breed, color, dob, sex)
             .then(
               () => {
                 loading.dismiss();
@@ -65,7 +66,6 @@ export class DogsPage implements OnInit {
             );
         }
       });
-
   }
 
 }

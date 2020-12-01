@@ -2,12 +2,14 @@ import { DogsService } from 'src/app/services/dogs.service';
 import { Component } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+// import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplitPaneService } from './services/split-pane.service';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+
+import { Plugins, Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +19,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class AppComponent {
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
+    // private splashScreen: SplashScreen,
+    // private statusBar: StatusBar,
     public spService: SplitPaneService,
     public authService: AuthService,
     private dogsService: DogsService,
@@ -29,6 +31,7 @@ export class AppComponent {
   }
 
   initializeApp() {
+    console.log(this.platform.is('tablet'));
     this.platform.ready().then(() => {
       /* this.afAuth.onAuthStateChanged(user => {
         if (user) {
@@ -44,8 +47,11 @@ export class AppComponent {
           this.splashScreen.hide();
         }
       }); */
-      this.splashScreen.hide();
-      this.statusBar.styleDefault();
+      if (Capacitor.isPluginAvailable('SplashScreen')){
+        Plugins.SplashScreen.hide();
+      }
+      // this.splashScreen.hide();
+      // this.statusBar.styleDefault();
     });
   }
 

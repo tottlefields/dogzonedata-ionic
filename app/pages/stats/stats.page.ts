@@ -1,3 +1,4 @@
+import { Dog } from 'src/app/models/dog.interface';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { SegmentChangeEventDetail } from '@ionic/core';
 
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 import { DogsService } from 'src/app/services/dogs.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AddWeightComponent } from './add-weight/add-weight.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stats',
@@ -18,7 +20,8 @@ import { AddWeightComponent } from './add-weight/add-weight.component';
 })
 export class StatsPage implements OnInit, OnDestroy {
   @ViewChild('lineChart', { static: false }) lineChart: ElementRef;
-  dogs: any;
+  // dogs: any;
+  dogIds: string[];
   chart: any;
   chartData = null;
   formData: NgForm;
@@ -39,13 +42,13 @@ export class StatsPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  onSwitchSeg(event: CustomEvent<SegmentChangeEventDetail>) {
+/*   onSwitchSeg(event: CustomEvent<SegmentChangeEventDetail>) {
     console.log(event.detail);
-  }
+  } */
 
   async onShowAddWeightModal() {
     this.modalCtrl
-      .create({ component: AddWeightComponent, componentProps: {dogs: this.dogs} })
+      .create({ component: AddWeightComponent })
       .then((modalEl) => {
         modalEl.present();
         return modalEl.onDidDismiss();
@@ -135,6 +138,22 @@ export class StatsPage implements OnInit, OnDestroy {
             },
           ],
         },
+        tooltips: {
+          callbacks: {
+            title: function(tooltipItems, data) {
+              let title = tooltipItems[0].label || '';
+              if (title) { title = moment(title).format('Do MMM YYYY'); }
+              return title;
+            },
+            label: function(tooltipItem, data) {
+              let label = data.datasets[tooltipItem.datasetIndex].label || '';
+              if (label) { label += ': '; }
+              label += (Math.round(tooltipItem.value * 100) / 100).toFixed(2);
+              label += 'kg';
+              return label;
+            }
+          }
+      }
       },
     });
     // console.log(this.chart);
@@ -148,6 +167,7 @@ export class StatsPage implements OnInit, OnDestroy {
       if (!dataByDog[dataPoint.dog]) {
         dataByDog[dataPoint.dog] = {
           label: dataPoint.label,
+          dog: dataPoint.dog,
           fill: false,
           borderColor: dataPoint.borderColor,
           data: []

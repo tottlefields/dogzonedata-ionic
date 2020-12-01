@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NavController } from '@ionic/angular';
+import { map } from 'rxjs/operators';
 import { DogsService } from 'src/app/services/dogs.service';
 
 @Component({
@@ -27,7 +28,12 @@ export class DogDetailPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.dog = this.dogsService.getDog(paramMap.get('dogId')).valueChanges();
+      this.dogsService.getIdea(paramMap.get('dogId')).subscribe(dog => {
+        this.dog = dog;
+        console.log(this.dog);
+      });
+      //this.dog = this.dogsService.getDog(paramMap.get('dogId')).valueChanges();
+      
       this.weights = this.dogsService.getAllWeights(paramMap.get('dogId')).valueChanges();
     });
   }

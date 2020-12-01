@@ -1,7 +1,7 @@
 {
   "name": "DogZoneData",
   "short_name": "DogZoneData",
-  "theme_color": "#1976d2",
+  "theme_color": "#7f5ca3",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",

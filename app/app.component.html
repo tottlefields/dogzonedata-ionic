@@ -4,19 +4,21 @@
       <ion-header lines="none">
         <ion-toolbar color="dark" style="background: #222428;">
           <div class="ion-text-center">
-            <ion-avatar
-              class="ion-margin"
-              style="
-                width: 100px;
-                height: 100px;
-                margin-right: auto;
-                margin-left: auto;
-                background-color: #7f5ac3;
-              "
-              ><ion-img [routerLink]="['/dzd/dogs/']" src="../assets/img/dzd-logo-trans.png"></ion-img
-            ></ion-avatar>
+            <ion-menu-toggle autoHide="false" menu="leftMenu">
+              <ion-avatar
+                class="ion-margin"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  margin-right: auto;
+                  margin-left: auto;
+                  background-color: #7f5ac3;
+                "
+                ><ion-img [routerLink]="['/dzd/dogs/']" src="../assets/img/dzd-logo-trans.png"></ion-img
+              ></ion-avatar>
+            </ion-menu-toggle>
           </div>
-          <h1 class="ion-text-center" style="color: #fff;">DogZoneData.com</h1>
+          <h1 class="ion-text-center ion-margin" style="color: #fff; margin-top: 25px;;">DogZoneData.com</h1>
         </ion-toolbar>
       </ion-header>
       <ion-content>

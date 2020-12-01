@@ -15,7 +15,7 @@ export class AuthGuard implements CanLoad {
     segments: UrlSegment[]
   ): boolean | Observable<boolean> | Promise<boolean> {
 
-    console.log(this.authService.currentUser);
+    // console.log(this.authService.currentUser);
     if (this.authService.currentUser) {
       return true;
     }
