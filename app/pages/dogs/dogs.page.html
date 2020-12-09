@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Your Dogs</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="doLogout()" size="small" fill="outline" color="light">Log Out</ion-button>
+      <ion-button (click)="signOut()" size="small" fill="outline" color="light">Log Out</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -14,7 +14,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size-xs="12" size-md="6" size-xl="4" class="ion-no-padding" *ngFor="let dog of dogs | async">
-        <ion-card button="true" color="light" class="ion-margin" [routerLink]="['/dzd/dogs/', dog.id]">
+        <ion-card button="true" color="light" class="ion-margin" [routerLink]="['/app/dogs/', dog.id]">
           <ion-card-header>
           <ion-avatar class="ion-float-right ion-margin-start dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color">
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl" width="100px" height="100px" ></ion-img>

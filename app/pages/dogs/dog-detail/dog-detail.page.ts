@@ -1,3 +1,4 @@
+import { Dog } from 'src/app/models/dog.interface';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,6 +15,7 @@ export class DogDetailPage implements OnInit, OnDestroy {
 
   public dog;
   public weights;
+  microchip: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,12 +30,14 @@ export class DogDetailPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.dogsService.getIdea(paramMap.get('dogId')).subscribe(dog => {
-        this.dog = dog;
-        console.log(this.dog);
+      this.route.data.subscribe((data: {dog: Dog}) => {
+        this.dog = data.dog;
+        this.microchip = this.dog.microchip;
+        if (this.microchip){
+          this.microchip = this.microchip.match(/.{1,3}/g).join(' ');
+        }
+        // console.log(this.dog);
       });
-      //this.dog = this.dogsService.getDog(paramMap.get('dogId')).valueChanges();
-      
       this.weights = this.dogsService.getAllWeights(paramMap.get('dogId')).valueChanges();
     });
   }

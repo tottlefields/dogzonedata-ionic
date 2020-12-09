@@ -9,6 +9,7 @@ export class SplitPaneService {
 
   constructor(public platform: Platform) {
     this.splitPaneState = false;
+    // console.log('constructing splitpane');
   }
 
   setSplitPane(state: boolean) {

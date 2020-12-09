@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button menu="leftMenu"></ion-menu-button>
@@ -11,10 +11,10 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-segment [(ngModel)]="stats">
+  <!-- <ion-segment [(ngModel)]="stats">
     <ion-segment-button value="weights">Weights</ion-segment-button>
     <ion-segment-button value="measurements">Measurements</ion-segment-button>
-  </ion-segment>
+  </ion-segment> -->
 
   <div [ngSwitch]="stats">
     <div [hidden]="stats != 'weights'" >
@@ -30,7 +30,7 @@
       </ion-card>
 
       <ion-list class="ion-padding-end">
-        <ion-item *ngFor="let dog of authService.dogs | async" >
+        <ion-item *ngFor="let dog of dogs | async" >
           <ion-avatar class="dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color" slot="start">
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl"></ion-img>
             <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png"></ion-img></ng-template>

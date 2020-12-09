@@ -8,7 +8,7 @@ import { IonSlides } from '@ionic/angular';
 })
 export class FoodPage implements OnInit {
 
-  @ViewChild('foodSlider') slider: IonSlides;
+  @ViewChild('foodSlider', { static: false }) slider: IonSlides;
   public daysOfWeek: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   public today: string;
   private currentDate = new Date();

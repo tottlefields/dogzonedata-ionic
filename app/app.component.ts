@@ -1,15 +1,13 @@
-import { DogsService } from 'src/app/services/dogs.service';
-import { Component } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { Component, ViewChild } from '@angular/core';
+import { Plugins, Capacitor } from '@capacitor/core';
 
 import { Platform } from '@ionic/angular';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplitPaneService } from './services/split-pane.service';
-import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-
-import { Plugins, Capacitor } from '@capacitor/core';
+import { DogsService } from './services/dogs.service';
+import { DogMenuComponent } from './shared/menus/dog-menu/dog-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -17,46 +15,34 @@ import { Plugins, Capacitor } from '@capacitor/core';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
+  dogs: any;
+  @ViewChild('dogMenu', { static: false }) dogMenu: DogMenuComponent;
+
   constructor(
     private platform: Platform,
     // private splashScreen: SplashScreen,
     // private statusBar: StatusBar,
+    private authService: AuthService,
+    public dogsService: DogsService,
     public spService: SplitPaneService,
-    public authService: AuthService,
-    private dogsService: DogsService,
-    public afAuth: AngularFireAuth,
-    private router: Router
   ) {
     this.initializeApp();
+    // console.log('after app is initialised');
   }
 
   initializeApp() {
-    console.log(this.platform.is('tablet'));
     this.platform.ready().then(() => {
-      /* this.afAuth.onAuthStateChanged(user => {
-        if (user) {
-          console.log(user);
-          this.authService.currentUser = user;
-          this.authService.dogs = this.dogsService.getDogList(user.uid).valueChanges();
-          //this.router.navigate(['/dzd/dogs']);
-          //this.router.navigateByUrl('/');
-          this.splashScreen.hide();
-        }
-        else {
-          this.router.navigateByUrl('/auth');
-          this.splashScreen.hide();
-        }
-      }); */
       if (Capacitor.isPluginAvailable('SplashScreen')){
         Plugins.SplashScreen.hide();
       }
-      // this.splashScreen.hide();
+      // console.log(this.dogMenu); // .updateDogList();
       // this.statusBar.styleDefault();
+      // this.splashScreen.hide();
     });
   }
 
-  doLogout() {
-    this.authService.logoutUser();
-    this.router.navigateByUrl('/auth');
+  signOut() {
+    this.authService.logOut();
   }
 }

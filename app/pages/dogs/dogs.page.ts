@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
@@ -18,20 +19,20 @@ export class DogsPage implements OnInit {
   formData: NgForm;
 
   constructor(
+    private afAuth: AngularFireAuth,
     private authService: AuthService,
     private dogsService: DogsService,
     private router: Router,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.dogs = this.authService.dogs;
+    this.dogs = this.dogsService.getDogs();
   }
 
-  doLogout(){
-    this.authService.logoutUser();
-    this.router.navigateByUrl('/auth');
+  signOut() {
+    this.authService.logOut();
   }
 
   async onShowAddDogModal(){
@@ -44,26 +45,17 @@ export class DogsPage implements OnInit {
       .then(async (resultData) => {
         this.formData = resultData.data;
         if (resultData.role === 'addDog') {
-          const name = this.formData.value.name;
-          const breed = this.formData.value.breed;
-          const kc_name = this.formData.value.kc_name;
-          const color = this.formData.value.color;
-          const dob = new Date(this.formData.value.dateOfBirth);
-          const sex = this.formData.value.sex;
-
           const loading = await this.loadingCtrl.create({
             message: 'Adding dog...'
           });
 
-          this.dogsService.createDog(this.authService.currentUser.uid, name, kc_name, breed, color, dob, sex)
-            .then(
-              () => {
-                loading.dismiss();
-              },
-              error => {
-                console.error(error);
-              }
-            );
+          this.formData.value.dob = new Date(this.formData.value.dateOfBirth);
+          // console.log(this.formData.value);
+
+          this.dogsService.addDog(this.formData.value).then(
+            () => { loading.dismiss(); },
+            error => { console.log(error); }
+          );
         }
       });
   }

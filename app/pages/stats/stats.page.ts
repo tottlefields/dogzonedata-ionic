@@ -19,8 +19,10 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./stats.page.scss'],
 })
 export class StatsPage implements OnInit, OnDestroy {
+
   @ViewChild('lineChart', { static: false }) lineChart: ElementRef;
-  // dogs: any;
+
+  public dogs: any;
   dogIds: string[];
   chart: any;
   chartData = null;
@@ -37,6 +39,7 @@ export class StatsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stats = 'weights';
+    this.dogs = this.dogsService.getDogs();
   }
 
   ngOnDestroy(): void {
@@ -54,6 +57,7 @@ export class StatsPage implements OnInit, OnDestroy {
         return modalEl.onDidDismiss();
       })
       .then(async (resultData) => {
+        // console.log(resultData);
         this.formData = resultData.data;
         if (resultData.role === 'addWeight') {
           let dogData = this.formData.value.dog;
@@ -67,7 +71,7 @@ export class StatsPage implements OnInit, OnDestroy {
             message: 'Adding new weight record...'
           });
 
-          this.dogsService.addWeightRecord(this.authService.currentUser.uid, dogId, date, weight, name, color)
+          this.dogsService.addWeightRecord(dogId, date, weight, name, color)
             .then(() => { this.dogsService.updateWeights(dogId); })
             .then(() => { loading.dismiss(); },
               error => { console.error(error); }
@@ -77,7 +81,7 @@ export class StatsPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() {
-    this.dogsService.getChartData(this.authService.currentUser.uid).valueChanges().subscribe(result => {
+    this.dogsService.getChartData().valueChanges().subscribe(result => {
       if (this.chartData) {
         this.updateChart(result);
       } else {
@@ -181,7 +185,7 @@ export class StatsPage implements OnInit, OnDestroy {
     return dataToPlot;
   }
 
-  createLineChart() {
+/*   createLineChart() {
     this.chart = new Chart(this.lineChart.nativeElement, {
       type: 'line',
       data: {
@@ -275,5 +279,5 @@ export class StatsPage implements OnInit, OnDestroy {
       },
     });
     console.log(this.chart);
-  }
+  } */
 }

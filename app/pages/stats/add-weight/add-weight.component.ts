@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { DogsService } from 'src/app/services/dogs.service';
 
 @Component({
   selector: 'app-add-weight',
@@ -17,9 +18,11 @@ export class AddWeightComponent implements OnInit {
     private modalCtrl: ModalController,
     public authService: AuthService,
     private navParams: NavParams,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private dogsService: DogsService
     ) {
     this.today = new Date().toString();
+    this.dogs = this.dogsService.getDogs();
     // this.dogs = this.navParams.data.dogs;
     // this.dogs.subscribe(result => {
     //   result.forEach(dog => {
@@ -35,7 +38,7 @@ export class AddWeightComponent implements OnInit {
   }
 
   async onAddWeight(form: NgForm) {
-    this.modalCtrl.dismiss([form], 'addWeight');
+    this.modalCtrl.dismiss(form, 'addWeight');
     const toast = await this.toastCtrl.create({
       message: 'New weight record added for ' + form.value.dog.name,
       duration: 2500,

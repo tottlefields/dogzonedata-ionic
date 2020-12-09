@@ -4,13 +4,9 @@
       <ion-menu-button menu="leftMenu"></ion-menu-button>
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>
-      <!--<ion-avatar [style.background-color]="dog?.color">
-        <ion-img [src]="dog?.imageUrl"></ion-img>
-      </ion-avatar>-->{{ dog?.name }}
-    </ion-title>
+    <ion-title class="ion-text-capitalize">{{ dog?.name }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button [routerLink]="['/dzd/dogs/edit/', dog?.id]">
+      <ion-button [routerLink]="['/app/dogs/edit/', dog?.id]">
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
     </ion-button>
     </ion-buttons>
@@ -27,8 +23,9 @@
             <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png" width="100px" height="100px" ></ion-img></ng-template>
           </ion-avatar>
       </ion-col>
-      <ion-col size-xs="12" size-sm="9" size-md="10" size-lg="9" size-xl="10" *ngIf="dog?.kc_name!==undefined">
-        <h4 class="ion-text-center ion-text-sm-left ion-text-uppercase ion-margin-top ion-margin-bottom">{{ dog?.kc_name }}</h4>
+      <ion-col size-xs="12" size-sm="9" size-md="10" size-lg="9" size-xl="10">
+        <h4 class="ion-text-center ion-text-sm-left ion-text-uppercase ion-margin-top ion-margin-bottom" *ngIf="dog?.kcName!==undefined">{{ dog?.kcName }}</h4>
+        <ion-text class="ion-text-center ion-text-sm-left" *ngIf="microchip!==undefined"><p>{{ microchip }}</p></ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>

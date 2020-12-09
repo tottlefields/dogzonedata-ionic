@@ -1,4 +1,4 @@
-<ion-app>
+<!-- <ion-app>
   <ion-split-pane contentId="main" [disabled]="spService.getSplitPane()">
     <ion-menu side="start" menuId="leftMenu" contentId="main" type="overlay">
       <ion-header lines="none">
@@ -14,7 +14,7 @@
                   margin-left: auto;
                   background-color: #7f5ac3;
                 "
-                ><ion-img [routerLink]="['/dzd/dogs/']" src="../assets/img/dzd-logo-trans.png"></ion-img
+                ><ion-img [routerLink]="['/']" src="../assets/img/dzd-logo-trans.png"></ion-img
               ></ion-avatar>
             </ion-menu-toggle>
           </div>
@@ -23,36 +23,11 @@
       </ion-header>
       <ion-content>
         <ion-list lines="none">
-          <ion-item-group>
-            <ion-item-divider color="light">Your Dogs</ion-item-divider>
-            <ion-menu-toggle
-              *ngFor="let dog of authService.dogs | async"
-              autoHide="false"
-              menu="leftMenu"
-            >
-              <ion-item
-                detail
-                class="ion-margin-vertical"
-                [routerLink]="['/dzd/dogs/', dog.id]"
-              >
-                <ion-avatar
-                  slot="start"
-                  class="dogAvatar"
-                  [style.border-color]="dog.color"
-                  [style.background-color]="dog.color"
-                >
-                  <img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl" />
-                  <ng-template #genericImg><img src="../../assets/img/generic-paw.png" /></ng-template>
-                </ion-avatar>
-                <ion-label><h2 class="ion-text-uppercase" [style.color]="dog.color">{{ dog.name }}</h2></ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          </ion-item-group>
+          <app-dog-menu #dogMenu></app-dog-menu>
           <ion-item-group>
             <ion-item-divider color="light">Your Account</ion-item-divider>
             <ion-menu-toggle autoHide="false" menu="leftMenu">
-              <!-- <ion-item [routerLink]="['/test']"><ion-label>Test Page</ion-label></ion-item>  -->
-              <ion-item (click)="doLogout()" button>
+              <ion-item (click)="signOut()" button>
                 <ion-icon name="log-out-outline" slot="start"></ion-icon>
                 <ion-label>Log Out</ion-label>
               </ion-item>
@@ -63,4 +38,7 @@
     </ion-menu>
     <ion-router-outlet id="main"></ion-router-outlet>
   </ion-split-pane>
+</ion-app> -->
+<ion-app>
+  <ion-router-outlet id="main"></ion-router-outlet>
 </ion-app>

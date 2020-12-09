@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Your Account</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="signOut()" size="small" fill="outline" color="light">Log Out</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item button (click)="signOut()" detail="false">
+    <ion-icon name="log-out-outline" slot="start"></ion-icon>
+    Logout
+  </ion-item>
+</ion-content>

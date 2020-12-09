@@ -1,0 +1,36 @@
+ion-content {
+    --background: #7f5ca3;
+}
+
+ion-slides {
+    height: 100%;
+    --bullet-background-active: #ffffff;
+}
+
+ion-slide {
+    display: flex;
+    flex-direction: column;
+}
+
+.intro-text {
+    width: 70%;
+}
+
+ion-button {
+    --border-radius: 4px;
+    --padding-start: 2.5em;
+    --padding-end: 2.5em;
+}
+
+ion-text a {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+ion-footer {
+    background: #7f5ca3;
+}
+
+.footer-md:before {
+    background-image: none;
+}
