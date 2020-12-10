@@ -85,6 +85,16 @@ export class DogsService {
     .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
   }
 
+  /* getChartDataByDog(dogId: string): AngularFirestoreCollection<DogWeight2> {
+    return this.afStore.collection('weights', ref => ref.where('dog', '==', dogId)
+    .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
+  } */
+
+  getChartDataByDog(dogId: string): AngularFirestoreCollection<DogWeight> {
+    return this.afStore.collection('dogs').doc(dogId).collection('weights', 
+    ref => ref.where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
+  }
+
   addWeightRecord(dogId: string, date: Date, weight: number, name: string, color: string): Promise<void> {
     const uid = this.authService.getUserId();
     const id = this.afStore.createId();

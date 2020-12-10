@@ -100,7 +100,7 @@ export class StatsPage implements OnInit, OnDestroy {
   }
 
   createChart(data) {
-    // console.log('creating chart....');
+    console.log('creating chart....');
 
     this.chartData = data;
     let dataToPlot = this.getChartData();
