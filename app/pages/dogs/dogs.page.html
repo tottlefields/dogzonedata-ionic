@@ -20,9 +20,7 @@
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl" width="100px" height="100px" ></ion-img>
             <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png" width="100px" height="100px" ></ion-img></ng-template>
           </ion-avatar>
-            <ion-card-title class="ion-text-uppercase" [style.color]="dog.color"
-              >{{ dog.name }}</ion-card-title
-            >
+            <ion-card-title class="ion-text-uppercase" [style.color]="dog.color">{{ dog.name }}</ion-card-title>
             <ion-card-subtitle>{{ dog.breed }}</ion-card-subtitle>
           </ion-card-header>
             <ion-card-content>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DogResolverService } from 'src/app/resolvers/dog-resolver.service';
 
 import { TabsPage } from './tabs.page';
 
@@ -25,18 +26,6 @@ const routes: Routes = [
             m => m.StatsPageModule
           ),
       },
-      /* {
-        path: 'search',
-        loadChildren: () =>
-          import('../search/search.module').then(m => m.SearchPageModule),
-      },
-      {
-        path: 'notifications',
-        loadChildren: () =>
-          import('../notifications/notifications.module').then(
-            m => m.NotificationsPageModule
-          ),
-      }, */
       {
         path: 'account',
         loadChildren: () =>
@@ -53,6 +42,13 @@ const routes: Routes = [
     path: 'dogs/edit/:dogId',
     loadChildren: () => import('../dogs/edit-dog/edit-dog.module').then((m) => m.EditDogPageModule),
   },
+  {
+    path: 'dogs/weights/:dogId',
+    resolve: {
+      dog: DogResolverService
+    },
+    loadChildren: () => import('../dogs/weights/weights.module').then( m => m.WeightsPageModule)
+  }
   /* {
     path: 'dogs/:dogId',
     loadChildren: () => import('../dogs/dog-detail/dog-detail.module').then((m) => m.DogDetailPageModule ),
