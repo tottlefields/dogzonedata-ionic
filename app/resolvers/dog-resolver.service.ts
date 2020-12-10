@@ -20,7 +20,7 @@ export class DogResolverService implements Resolve<any> {
     let loading: HTMLIonLoadingElement;
 
     const loadingPrompt = this.loadingCtrl.create({
-      message: 'Fetching dog details...'
+      message: 'Fetching details...'
     });
 
     return from(loadingPrompt).pipe(
