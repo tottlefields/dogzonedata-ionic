@@ -1,0 +1,122 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-color" [style.background-color]="dog?.color" [style.color]="dog?.colorText">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="leftMenu"></ion-menu-button>
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-capitalize">{{ dog?.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/app/dogs/edit/', dog?.id]">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+    </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-template #loading>Loading Data...</ng-template>
+  <ion-grid class="ion-no-padding" [style.background-color]="dog?.color" [style.color]="dog?.colorText">
+    <ion-row style="align-items: center;">
+      <ion-col size-xs="12" size-sm="3" size-md="2" size-lg="3" size-xl="2" class="ion-no-padding ion-text-center">
+          <ion-avatar class="dogAvatar ion-margin-top ion-margin-bottom" style="border-color: white;" [style.background-color]="dog?.color">
+            <ion-img *ngIf="dog?.imageUrl; else genericImg" [src]="dog?.imageUrl" width="100px" height="100px" ></ion-img>
+            <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png" width="100px" height="100px" ></ion-img></ng-template>
+          </ion-avatar>
+      </ion-col>
+      <ion-col size-xs="12" size-sm="9" size-md="10" size-lg="9" size-xl="10">
+        <h4 class="ion-text-center ion-text-sm-left ion-text-uppercase ion-margin-top ion-margin-bottom" *ngIf="dog?.kcName!==undefined">{{ dog?.kcName }}</h4>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" size-xl="4" class="ion-no-padding">
+        <ion-card [routerLink]="['/app/dogs/details/', dog.id]" class="ion-margin">
+          <ion-card-header>
+            <ion-card-title [style.color]="dog.color">Dog Details
+              <ion-icon name="paw-outline" style="float:right"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="ion-no-padding">
+              <ion-item>
+                <fa-icon [icon]="['fas', 'birthday-cake']" slot="start"></fa-icon>
+                <ion-label>{{ birthDate }}</ion-label>
+                <ion-badge slot="end" *ngIf="age > 0">{{ age }}</ion-badge>
+              </ion-item>
+              <ion-item *ngIf="microchip.num!==''" lines="none">
+                <fa-icon [icon]="['fas', 'barcode']" slot="start"></fa-icon>
+                <ion-label>{{ microchip.num }}</ion-label>
+                <ion-note slot="end" color="secondary" *ngIf="microchip.provider!==''">
+                  <a href="{{ microchip.url }}" target="_blank" (click)="$event.stopPropagation();">{{ microchip.provider }}</a>
+                </ion-note>
+              </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6" size-xl="4" class="ion-no-padding" *ngIf="dog.currWeight;">
+        <ion-card [routerLink]="['/app/dogs/weights/', dog.id]" class="ion-margin">
+          <ion-card-header>
+            <ion-card-title [style.color]="dog.color">Recent Weights
+              <ion-icon name="stats-chart-outline" style="float:right"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col class="ion-text-center" *ngIf="dog.prevWeight && dog.currWeight">
+                  <ion-label color="secondary">
+                    <h2 style="font-weight: 800;">{{ dog.prevWeight.weight | number: '1.2-2' }}kg</h2>
+                    <p>{{ dog.prevWeight.date.toDate() | date: "MMM d" }}</p>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center" *ngIf="dog.prevWeight && dog.currWeight">
+                  <span>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight > 0" color="danger">
+                      <p><ion-icon name="arrow-up-outline"></ion-icon><span class="ion-hide-lg-down">{{ dog.currWeight.weight - dog.prevWeight.weight | number: '1.2-2' }}kg</span></p>
+                    </ion-label>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight < 0" color="success">
+                      <p><ion-icon name="arrow-down-outline"></ion-icon><span class="ion-hide-lg-down">{{ dog.prevWeight.weight - dog.currWeight.weight | number: '1.2-2' }}kg</span></p>
+                    </ion-label>
+                    <ion-label *ngIf="dog.currWeight.weight - dog.prevWeight.weight == 0">
+                      <p><ion-icon name="reorder-two-outline"></ion-icon></p>
+                    </ion-label>
+                  </span>
+                </ion-col>
+                <ion-col class="ion-text-center" *ngIf="dog.currWeight">
+                  <ion-label color="secondary">
+                    <h2 style="font-weight: 800;">{{ dog.currWeight.weight | number: '1.2-2' }}kg</h2>
+                    <p>{{ dog.currWeight.date.toDate() | date: "MMM d" }}</p>
+                  </ion-label>
+                </ion-col>
+                <!-- <ng-template #elseBlock>
+                  <ion-col class="ion-text-center" size-sm="12">
+                    <ion-label class="ion-text-wrap"><p>Not enough weights currently recorded for this dog.</p></ion-label>
+                  </ion-col>
+                </ng-template> -->
+              </ion-row>
+              </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6" size-xl="4" class="ion-no-padding" *ngIf="health?.length">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title [style.color]="dog.color">Health Results
+              <ion-icon name="medkit-outline" style="float:right"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+
+
+
+          </ion-card-content>    
+        </ion-card>    
+      </ion-col>
+
+
+    </ion-row>
+  </ion-grid>
+</ion-content>
