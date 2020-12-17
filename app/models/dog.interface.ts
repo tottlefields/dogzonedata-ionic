@@ -8,7 +8,7 @@ export interface Dog {
     color: string;
     colorText: string;
     imageUrl: string;
-    microchip?: string;
+    microchip?: object;
     dateOfBirth: Date;
     dob?: any;
     currWeight?: DogWeight;
@@ -16,4 +16,6 @@ export interface Dog {
     uid: string;
     sex?: string;
     isRemoved: boolean;
+    entire?: boolean;
+    neuteredDate?: Date;
   }

@@ -48,6 +48,13 @@ const routes: Routes = [
       dog: DogResolverService
     },
     loadChildren: () => import('../dogs/weights/weights.module').then( m => m.WeightsPageModule)
+  },
+  {
+    path: 'dogs/details/:dogId',
+    resolve: {
+      dog: DogResolverService
+    },
+    loadChildren: () => import('../dogs/dog-detail/dog-detail.module').then( m => m.DogDetailPageModule)
   }
   /* {
     path: 'dogs/:dogId',

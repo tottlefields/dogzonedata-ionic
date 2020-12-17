@@ -52,8 +52,8 @@ export class WeightsPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() {
-    console.log("entering... get chart data");
-    this.dogsService.getChartDataByDog(this.dog.id).valueChanges().subscribe(result => {
+    // console.log("entering... get chart data");
+    this.dogsService.getChartDataByDog(this.dog.id, 12).valueChanges().subscribe(result => {
       if (this.chartData) {
         // this.updateChart(result);
       } else {

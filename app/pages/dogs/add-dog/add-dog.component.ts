@@ -20,6 +20,8 @@ export class AddDogComponent implements OnInit {
   @ViewChild('imgPicker', { static: false }) imgPicker: ImagePickerComponent;
 
   dogColors: any;
+  chipProviders: any;
+  Object = Object;
 
   constructor(
     private modalCtrl: ModalController,
@@ -31,6 +33,7 @@ export class AddDogComponent implements OnInit {
 
   ngOnInit() {
     this.dogColors = environment.dogColors;
+    this.chipProviders = environment.microchipProviders;
     this.form = new FormGroup({
       kcName: new FormControl(null, {
         updateOn: 'blur'
@@ -42,7 +45,10 @@ export class AddDogComponent implements OnInit {
       sex: new FormControl(null, {
         updateOn: 'blur'
       }),
-      microchip: new FormControl(null, {
+      microchipNum: new FormControl(null, {
+        updateOn: 'blur'
+      }),
+      chipProvider: new FormControl(null, {
         updateOn: 'blur'
       }),
       breed: new FormControl(null, {
@@ -62,7 +68,10 @@ export class AddDogComponent implements OnInit {
   }
 
   onCancel() {
-    console.log(this.form.value.imageUrl);
+    // console.log(this.form.value.imageUrl);
+    if (this.form.value.imageUrl) {
+      this.dogsService.removeImage(this.form.value.imageUrl);
+    }
     this.modalCtrl.dismiss(null, 'cancel');
   }
 

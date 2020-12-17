@@ -32,7 +32,13 @@ export class DogsPage implements OnInit {
   }
 
   signOut() {
+    //this.dogs;
     this.authService.logOut();
+    /*await this.afAuth.signOut();
+    this.authService.unsubscribe.next();
+    this.authService.unsubscribe.complete();
+    this.router.navigate(['/']);*/
+    
   }
 
   async onShowAddDogModal(){
@@ -50,9 +56,17 @@ export class DogsPage implements OnInit {
           });
 
           this.formData.value.dob = new Date(this.formData.value.dateOfBirth);
+          let dog = this.formData.value;
+          dog.microchip = {
+            'num' : this.formData.value.microchipNum,
+            'provider' :  this.formData.value.chipProvider
+          };
+          delete dog.microchipNum;
+          delete dog.chipProvider;
+      
           // console.log(this.formData.value);
 
-          this.dogsService.addDog(this.formData.value).then(
+          this.dogsService.addDog(dog).then(
             () => { loading.dismiss(); },
             error => { console.log(error); }
           );

@@ -24,6 +24,7 @@ export class StatsPage implements OnInit, OnDestroy {
 
   public dogs: any;
   dogIds: string[];
+  dogLookup = {};
   chart: any;
   chartData = null;
   formData: NgForm;
@@ -39,7 +40,19 @@ export class StatsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stats = 'weights';
-    this.dogs = this.dogsService.getDogs();
+    // this.dogs = this.dogsService.getDogs();
+    this.dogsService.getDogs().subscribe(dogs => {
+      this.dogs = dogs;
+      for (let dog of this.dogs) {
+        if (!this.dogLookup[dog.id]) {
+          this.dogLookup[dog.id] = {
+            label: dog.name,
+            borderColor: dog.color,
+            isRemoved: dog.isRemoved
+          };
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -81,6 +94,7 @@ export class StatsPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() {
+    
     this.dogsService.getChartData().valueChanges().subscribe(result => {
       if (this.chartData) {
         this.updateChart(result);
@@ -100,9 +114,10 @@ export class StatsPage implements OnInit, OnDestroy {
   }
 
   createChart(data) {
-    console.log('creating chart....');
+    // console.log('creating chart....');
 
     this.chartData = data;
+    // let dataToPlot = this.getChartData();
     let dataToPlot = this.getChartData();
 
     this.chart = new Chart(this.lineChart.nativeElement, {
@@ -168,16 +183,20 @@ export class StatsPage implements OnInit, OnDestroy {
     let dataByDog = [];
 
     for (let dataPoint of this.chartData) {
-      if (!dataByDog[dataPoint.dog]) {
-        dataByDog[dataPoint.dog] = {
-          label: dataPoint.label,
-          dog: dataPoint.dog,
-          fill: false,
-          borderColor: dataPoint.borderColor,
-          data: []
-        };
+      if (this.dogLookup[dataPoint.dog] && !this.dogLookup[dataPoint.dog].isRemoved) {
+        if (!dataByDog[dataPoint.dog]) {
+          dataByDog[dataPoint.dog] = {
+            // label: dataPoint.label,
+            // borderColor: dataPoint.borderColor,
+            label: this.dogLookup[dataPoint.dog].label,
+            borderColor: this.dogLookup[dataPoint.dog].borderColor,
+            dog: dataPoint.dog,
+            fill: false,
+            data: []
+          };
+        }
+        dataByDog[dataPoint.dog].data.push({x: moment(dataPoint.date.toDate()).format('YYYY-MM-DD'), y: dataPoint.weight});
       }
-      dataByDog[dataPoint.dog].data.push({x: moment(dataPoint.date.toDate()).format('YYYY-MM-DD'), y: dataPoint.weight});
     }
     for (let key in dataByDog) {
       dataToPlot.push(dataByDog[key]);

@@ -1,3 +1,4 @@
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ControlContainer } from '@angular/forms';
@@ -7,6 +8,8 @@ import { from, Subject } from 'rxjs';
 // import { auth } from 'firebase/app';
 // import 'firebase/auth';
 import firebase from 'firebase/app';
+import { takeUntil } from 'rxjs/operators';
+import { DogsService } from './dogs.service';
 
 export interface User {
   uid: string;
@@ -25,6 +28,7 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
+    private afs: AngularFirestore,
     private router: Router
   ) { }
 
@@ -36,8 +40,18 @@ export class AuthService {
     return this.afAuth.sendPasswordResetEmail(email);
   }
 
-  logOut(){
-    this.afAuth.signOut().then(() => this.router.navigate(['/']));
+  async logOut(){
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+    await this.afAuth.signOut();
+    //this.unsubscribe.next();
+    //this.unsubscribe.complete();
+    this.router.navigate(['/']);
+    // this.afAuth.signOut().then(() => this.router.navigate(['/']));
+  }
+
+  getUserData() {
+    return this.afs.doc<User>(`users/${this.getUserId()})`).valueChanges().pipe(takeUntil(this.unsubscribe));
   }
 
   getUserId() {

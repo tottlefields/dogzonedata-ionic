@@ -6,6 +6,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -29,6 +31,7 @@ import { DogMenuComponent } from './shared/menus/dog-menu/dog-menu.component';
     AngularFirestoreModule,
     AngularFireStorageModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    FontAwesomeModule
   ],
   providers: [
     StatusBar,
@@ -37,4 +40,4 @@ import { DogMenuComponent } from './shared/menus/dog-menu/dog-menu.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

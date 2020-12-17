@@ -27,13 +27,13 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
+        <ion-col size="6">
           <ion-item>
             <ion-label position="floating">Name</ion-label>
             <ion-input type="text" autocomplete="off" autocorrect="off" formControlName="name" class="ion-text-capitalize"></ion-input>
           </ion-item>
         </ion-col>
-        <ion-col>
+        <ion-col size="6">
           <ion-item>
             <ion-label position="floating">Sex</ion-label>
             <ion-select interface="popover" formControlName="sex">
@@ -42,28 +42,32 @@
             </ion-select>
           </ion-item>
         </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
+        <ion-col size="12">
           <ion-item>
-            <ion-label position="floating">Breed</ion-label>
-            <ion-input type="text" autocomplete="on" autocorrect="on" formControlName="breed" class="ion-text-capitalize"></ion-input>
+            <ion-label>Breed</ion-label>
+            <ion-input type="text" autocomplete="on" autocorrect="on" formControlName="breed" class="ion-text-capitalize ion-text-right"></ion-input>
           </ion-item>
         </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
+        <ion-col size="12">
           <ion-item>
-            <ion-label position="floating">Date of Birth</ion-label>
+            <ion-label>Date of Birth</ion-label>
             <ion-datetime formControlName="dateOfBirth"></ion-datetime>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
+        <ion-col size="12" size-md="6">
           <ion-item>
-            <ion-label position="floating">Microchip</ion-label>
-            <ion-input type="number" inputmode="numeric" autocomplete="off" autocorrect="off" formControlName="microchip"></ion-input>
+            <ion-label>Microchip</ion-label>
+            <ion-input class="ion-text-right" type="number" inputmode="numeric" autocomplete="off" autocorrect="off" formControlName="microchipNum"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label>Chip Provider</ion-label>
+            <ion-select formControlName="chipProvider" interface="popover">
+              <ion-select-option *ngFor="let c of Object.keys(chipProviders)" value="{{ c }}">{{ c }}</ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -73,7 +77,6 @@
             <ion-label position="floating">Signature Colour</ion-label>
             <ion-select formControlName="color" (ionChange)="changeDogColor($event)" interface="popover">
               <ion-select-option *ngFor="let c of dogColors" value="{{ c.code }}">{{ c.color }}</ion-select-option>
-              <ion-select-option value="#008000">Green</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>

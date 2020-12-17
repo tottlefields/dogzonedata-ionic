@@ -4,8 +4,8 @@ import { DogWeight } from '../models/dog-weight.interface';
 import { Dog } from '../models/dog.interface';
 import * as moment from 'moment';
 import { DogWeight2 } from '../models/dog-weight2.interface';
-import { finalize, map, take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { finalize, map, take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
@@ -16,6 +16,7 @@ import { AuthService } from './auth.service';
 export class DogsService {
 
   private dogsCollection: AngularFirestoreCollection<Dog>;
+  unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private afStore: AngularFirestore,
@@ -36,7 +37,9 @@ export class DogsService {
   getDogs() {
     const uid = this.authService.getUserId();
     return this.afStore.collection('dogs', ref => ref.where('uid', '==', uid).where('isRemoved', '==', false)
-    .orderBy('dob')).valueChanges({ idField: 'id' });
+    .orderBy('dob')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
   }
 
   getDog(dogId: string): Observable<Dog> {
@@ -50,6 +53,10 @@ export class DogsService {
 
   getAllWeights(dogId: string): AngularFirestoreCollection<DogWeight> {
     return this.afStore.collection('dogs').doc(dogId).collection('weights', ref => ref.orderBy('date', 'desc'));
+  }
+
+  getHealthData(dogId: string) {
+    return this.afStore.collection('dogs').doc(dogId).collection('health', ref => ref.orderBy('date', 'desc'));
   }
 
   updateDog(dogId: string, formData: any){
@@ -81,8 +88,8 @@ export class DogsService {
 
   getChartData(): AngularFirestoreCollection<DogWeight2> {
     const uid = this.authService.getUserId();
-    return this.afStore.collection('weights', ref => ref.where('uid', '==', uid).where('validDog', '==', true)
-    .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
+    return this.afStore.collection('weights', ref => ref.where('uid', '==', uid)
+      .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
   }
 
   /* getChartDataByDog(dogId: string): AngularFirestoreCollection<DogWeight2> {
@@ -90,16 +97,17 @@ export class DogsService {
     .where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
   } */
 
-  getChartDataByDog(dogId: string): AngularFirestoreCollection<DogWeight> {
+  getChartDataByDog(dogId: string, months: number): AngularFirestoreCollection<DogWeight> {
     return this.afStore.collection('dogs').doc(dogId).collection('weights', 
-    ref => ref.where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date'));
+    ref => ref.where('date', '>=', moment().subtract(months, 'months').toDate()).orderBy('date'));
   }
 
   addWeightRecord(dogId: string, date: Date, weight: number, name: string, color: string): Promise<void> {
     const uid = this.authService.getUserId();
     const id = this.afStore.createId();
-    this.afStore.collection('weights/').add({
-      date, weight, uid, dog: dogId, label: name, borderColor: color, validDog: true });
+    // this.afStore.collection('weights/').add({
+    //  date, weight, uid, dog: dogId, label: name, borderColor: color, validDog: true });
+    this.afStore.collection('weights/').add({date, weight, uid, dog: dogId});
     return this.afStore.doc('dogs/' + dogId + '/weights/' + id).set({ date, weight });
   }
 

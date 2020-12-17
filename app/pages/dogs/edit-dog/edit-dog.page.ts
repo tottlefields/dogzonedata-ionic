@@ -20,6 +20,8 @@ export class EditDogPage implements OnInit, OnDestroy {
   dog: any;
   dogColors: any;
   dogColor = '#000000';
+  chipProviders: any;
+  Object = Object;
   @ViewChild('imgPicker', { static: false }) imgPicker: ImagePickerComponent;
 
   constructor(
@@ -39,6 +41,8 @@ export class EditDogPage implements OnInit, OnDestroy {
       }
 
       this.dogColors = environment.dogColors;
+      this.chipProviders = environment.microchipProviders;
+      console.log(this.chipProviders);
 
       this.form = new FormGroup({
         kcName: new FormControl(null, {
@@ -51,7 +55,10 @@ export class EditDogPage implements OnInit, OnDestroy {
         sex: new FormControl(null, {
           updateOn: 'blur'
         }),
-        microchip: new FormControl(null, {
+        microchipNum: new FormControl(null, {
+          updateOn: 'blur'
+        }),
+        chipProvider: new FormControl(null, {
           updateOn: 'blur'
         }),
         breed: new FormControl(null, {
@@ -83,7 +90,19 @@ export class EditDogPage implements OnInit, OnDestroy {
         this.form.get('kcName').setValue(dog.kcName);
         this.form.get('sex').setValue(dog.sex);
         this.form.get('breed').setValue(dog.breed);
-        this.form.get('microchip').setValue(dog.microchip);
+
+        if (this.dog.microchip){
+          if (typeof this.dog.microchip !== 'object'){
+            this.dog.microchip = {
+              'num' : this.dog.microchip,
+              'provider' : '',
+            };
+            console.log('updating dog with new microchip format...')
+            this.dogsService.updateDog(this.dog.id, this.dog);
+          }
+        }
+        this.form.get('microchipNum').setValue(this.dog.microchip.num);
+        this.form.get('chipProvider').setValue(this.dog.microchip.provider);
         this.form.get('color').setValue(dog.color);
         this.form.get('dateOfBirth').setValue(dog.dob.toDate().toISOString());
       });
@@ -136,17 +155,23 @@ export class EditDogPage implements OnInit, OnDestroy {
   }
 
   updateDog() {
-    if (!this.form.valid) {
-      return;
-    }
+    if (!this.form.valid) { return; }
 
     if (this.dog.color !== this.form.value.color){
       // console.log('dog colour changed... need to update the weights documents...');
-      this.dogsService.updateWeightsColor(this.dog.id, this.form.value.color);
+      // this.dogsService.updateWeightsColor(this.dog.id, this.form.value.color);
     }
 
     this.form.value.dob = new Date(this.form.value.dateOfBirth);
-    this.dogsService.updateDog(this.dog.id, this.form.value);
+    let dog = this.form.value;
+    dog.microchip = {
+      'num' : this.form.value.microchipNum,
+      'provider' :  this.form.value.chipProvider
+    };
+    delete dog.microchipNum;
+    delete dog.chipProvider;
+
+    this.dogsService.updateDog(this.dog.id, dog);
     this.navCtrl.navigateBack(['/app/dogs/', this.dog.id]);
   }
 }

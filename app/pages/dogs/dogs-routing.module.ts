@@ -18,8 +18,8 @@ const routes: Routes = [
     resolve: {
       dog: DogResolverService
     },
-    loadChildren: () => import('./dog-detail/dog-detail.module').then((m) => m.DogDetailPageModule ),
-  }
+    loadChildren: () => import('./dog/dog.module').then((m) => m.DogPageModule ),
+  },
 ];
 
 @NgModule({
