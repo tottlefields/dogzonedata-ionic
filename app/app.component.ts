@@ -7,7 +7,6 @@ import { Platform } from '@ionic/angular';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplitPaneService } from './services/split-pane.service';
 import { DogsService } from './services/dogs.service';
-import { DogMenuComponent } from './shared/menus/dog-menu/dog-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +16,6 @@ import { DogMenuComponent } from './shared/menus/dog-menu/dog-menu.component';
 export class AppComponent {
 
   dogs: any;
-  @ViewChild('dogMenu', { static: false }) dogMenu: DogMenuComponent;
 
   constructor(
     private platform: Platform,
@@ -43,6 +41,7 @@ export class AppComponent {
   }
 
   signOut() {
+    this.dogsService.logOut();
     this.authService.logOut();
   }
 }

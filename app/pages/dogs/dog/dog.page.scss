@@ -4,3 +4,7 @@ ion-avatar.dogAvatar {
   margin-left: auto;
   margin-right: auto;
 }
+
+ion-item:last-child {
+  --inner-border-width: 0;
+}

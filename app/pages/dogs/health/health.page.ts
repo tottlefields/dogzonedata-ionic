@@ -1,21 +1,21 @@
-import { Dog } from 'src/app/models/dog.interface';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Dog } from 'src/app/models/dog.interface';
 
 @Component({
-  selector: 'app-dog-detail',
-  templateUrl: './dog-detail.page.html',
-  styleUrls: ['./dog-detail.page.scss'],
+  selector: 'app-health',
+  templateUrl: './health.page.html',
+  styleUrls: ['./health.page.scss'],
 })
-export class DogDetailPage implements OnInit {
+export class HealthPage implements OnInit {
 
   public dog;
 
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap) => {
@@ -29,4 +29,5 @@ export class DogDetailPage implements OnInit {
       this.dog = data.dog;
     });
   }
+
 }

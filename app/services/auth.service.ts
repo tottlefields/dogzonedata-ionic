@@ -28,9 +28,10 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
-    private router: Router
-  ) { }
+    private afStore: AngularFirestore,
+    private router: Router,
+  ) { 
+  }
 
   signIn({email, password}) {
     return this.afAuth.signInWithEmailAndPassword(email, password);
@@ -41,17 +42,15 @@ export class AuthService {
   }
 
   async logOut(){
+    await this.afAuth.signOut();
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    await this.afAuth.signOut();
-    //this.unsubscribe.next();
-    //this.unsubscribe.complete();
     this.router.navigate(['/']);
     // this.afAuth.signOut().then(() => this.router.navigate(['/']));
   }
 
   getUserData() {
-    return this.afs.doc<User>(`users/${this.getUserId()})`).valueChanges().pipe(takeUntil(this.unsubscribe));
+    return this.afStore.collection('users').doc<User>(this.getUserId()).valueChanges().pipe(takeUntil(this.unsubscribe));
   }
 
   getUserId() {

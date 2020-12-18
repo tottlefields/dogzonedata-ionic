@@ -6,6 +6,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 
 import { AuthService } from 'src/app/services/auth.service';
 import { DogsService } from 'src/app/services/dogs.service';
+import { SplitPaneService } from 'src/app/services/split-pane.service';
 import { AddDogComponent } from './add-dog/add-dog.component';
 
 @Component({
@@ -22,6 +23,7 @@ export class DogsPage implements OnInit {
     private afAuth: AngularFireAuth,
     private authService: AuthService,
     private dogsService: DogsService,
+    private splitPaneService: SplitPaneService,
     private router: Router,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController
@@ -29,15 +31,22 @@ export class DogsPage implements OnInit {
 
   ngOnInit() {
     this.dogs = this.dogsService.getDogs();
+    this.splitPaneService.setSplitPane(true);
+  }
+
+  ionViewWillEnter() {
+    // console.log('entering dogs page');
+    this.splitPaneService.setSplitPane(true);
+  }
+
+  ionViewWillLeave() {
+    // console.log('leaving dogs page');
+    this.splitPaneService.setSplitPane(false);
   }
 
   signOut() {
-    //this.dogs;
+    this.dogsService.logOut();
     this.authService.logOut();
-    /*await this.afAuth.signOut();
-    this.authService.unsubscribe.next();
-    this.authService.unsubscribe.complete();
-    this.router.navigate(['/']);*/
     
   }
 

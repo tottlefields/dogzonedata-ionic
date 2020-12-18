@@ -30,7 +30,7 @@
       </ion-card>
 
       <ion-list class="ion-padding-end">
-        <ion-item *ngFor="let dog of dogs" [routerLink]="['/app/dogs/weights/', dog.id]" routerDirection="forward">
+        <ion-item *ngFor="let dog of dogs" [routerLink]="['/app/dzd/dogs/weights/', dog.id]" routerDirection="forward">
           <ion-avatar class="dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color" slot="start">
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl"></ion-img>
             <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png"></ion-img></ng-template>
@@ -40,9 +40,6 @@
               <ion-row class="ion-align-items-center">
                 <ion-col class="ion-hide-sm-down" size-sm="5" size-md="3">
                   <h2 class="ion-text-uppercase" [style.color]="dog.color"><strong>{{ dog.name }}</strong></h2>
-                  <!-- <a [routerLink]="['/app/dogs/weights/', dog.id]" routerDirection="forward" style="text-decoration: none;">
-                    <h2 class="ion-text-uppercase" [style.color]="dog.color"><strong>{{ dog.name }}</strong></h2>
-                  </a> -->
                 </ion-col>
                 <ion-col class="ion-text-center" size-sm="3" *ngIf="dog.prevWeight && dog.currWeight">
                   <ion-label>

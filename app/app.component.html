@@ -23,7 +23,17 @@
       </ion-header>
       <ion-content>
         <ion-list lines="none">
-          <app-dog-menu #dogMenu></app-dog-menu>
+           <ion-item-group>
+            <ion-item-divider color="light">Your Dogs</ion-item-divider>
+            <ion-menu-toggle *ngFor="let dog of dogsService.getDogs()" autoHide="false" menu="leftMenu">
+              <ion-item detail class="ion-margin-vertical" [routerLink]="['/dzd/dogs/', dog.id]">
+                <ion-avatar slot="start" class="dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color">
+                  <img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl" />
+                  <ng-template #genericImg><img src="../../assets/img/generic-paw.png" /></ng-template>
+                </ion-avatar>
+                <ion-label><h2 class="ion-text-uppercase" [style.color]="dog.color">{{ dog.name }}</h2></ion-label>
+              </ion-item>
+            </ion-menu-toggle>
           <ion-item-group>
             <ion-item-divider color="light">Your Account</ion-item-divider>
             <ion-menu-toggle autoHide="false" menu="leftMenu">
@@ -40,5 +50,5 @@
   </ion-split-pane>
 </ion-app> -->
 <ion-app>
-  <ion-router-outlet id="main"></ion-router-outlet>
+  <ion-router-outlet id="basic"></ion-router-outlet>
 </ion-app>

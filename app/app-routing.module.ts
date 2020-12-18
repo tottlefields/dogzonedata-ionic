@@ -19,10 +19,15 @@ const routes: Routes = [
     ...canActivate(redirectLoggedInToApp),
     loadChildren: () => import('./pages/start/start.module').then( m => m.StartPageModule)
   },
-  {
+/*   {
     path: 'app',
     ...canActivate(redirectUnauthorizedToLogin),
     loadChildren: () => import('./pages/tabs/tabs.module').then( m => m.TabsPageModule)
+  }, */
+  {
+    path: 'app',
+    ...canActivate(redirectUnauthorizedToLogin),
+    loadChildren: () => import('./pages/layout/layout.module').then( m => m.LayoutPageModule)
   }
 ];
 

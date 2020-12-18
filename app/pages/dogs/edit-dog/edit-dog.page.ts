@@ -20,6 +20,7 @@ export class EditDogPage implements OnInit, OnDestroy {
   dog: any;
   dogColors: any;
   dogColor = '#000000';
+  textColor = '#FFFFFF';
   chipProviders: any;
   Object = Object;
   @ViewChild('imgPicker', { static: false }) imgPicker: ImagePickerComponent;
@@ -36,13 +37,13 @@ export class EditDogPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('dogId')) {
-        this.navCtrl.navigateBack(['/app/dogs/']);
+        this.navCtrl.navigateBack(['/app/dzd/dogs/']);
         return;
       }
 
       this.dogColors = environment.dogColors;
       this.chipProviders = environment.microchipProviders;
-      console.log(this.chipProviders);
+      // console.log(this.chipProviders);
 
       this.form = new FormGroup({
         kcName: new FormControl(null, {
@@ -86,20 +87,20 @@ export class EditDogPage implements OnInit, OnDestroy {
           this.imgPicker.dogColor = dog.color;
           this.dogColor = dog.color;
         }
+        if (dog.colorText){ this.textColor = dog.colorText; }
         this.form.patchValue({name : dog.name});
         this.form.get('kcName').setValue(dog.kcName);
         this.form.get('sex').setValue(dog.sex);
         this.form.get('breed').setValue(dog.breed);
 
-        if (this.dog.microchip){
-          if (typeof this.dog.microchip !== 'object'){
-            this.dog.microchip = {
-              'num' : this.dog.microchip,
-              'provider' : '',
-            };
-            console.log('updating dog with new microchip format...')
-            this.dogsService.updateDog(this.dog.id, this.dog);
-          }
+        if (typeof this.dog.microchip !== 'object' || !this.dog.microchip){
+          let chip = (this.dog.microchip) ? this.dog.microchip : '';
+          this.dog.microchip = {
+            'num' : chip,
+            'provider' : '',
+          };
+          console.log('updating dog with new microchip format...')
+          this.dogsService.updateDog(this.dog.id, this.dog);
         }
         this.form.get('microchipNum').setValue(this.dog.microchip.num);
         this.form.get('chipProvider').setValue(this.dog.microchip.provider);
@@ -152,6 +153,7 @@ export class EditDogPage implements OnInit, OnDestroy {
   changeDogColor(event) {
     this.dogColor = event.detail.value;
     this.imgPicker.dogColor = this.dogColor;
+    this.textColor = environment.textColors[this.dogColor];
   }
 
   updateDog() {
@@ -172,6 +174,6 @@ export class EditDogPage implements OnInit, OnDestroy {
     delete dog.chipProvider;
 
     this.dogsService.updateDog(this.dog.id, dog);
-    this.navCtrl.navigateBack(['/app/dogs/', this.dog.id]);
+    this.navCtrl.navigateBack(['/app/dzd/dogs/', this.dog.id]);
   }
 }

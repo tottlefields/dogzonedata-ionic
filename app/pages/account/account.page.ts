@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { AuthService, User } from 'src/app/services/auth.service';
+import { DogsService } from 'src/app/services/dogs.service';
 
 @Component({
   selector: 'app-account',
@@ -14,6 +15,7 @@ export class AccountPage implements OnInit {
   constructor(
     // private afAuth: AngularFireAuth,
     // private router: Router,
+    private dogsService: DogsService,
     private authService: AuthService
   ) { }
 
@@ -25,6 +27,7 @@ export class AccountPage implements OnInit {
 
 
   signOut() {
+    this.dogsService.logOut();
     this.authService.logOut();
   }
 

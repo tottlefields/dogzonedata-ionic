@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { DogMenuComponent } from './dog-menu.component';
+import { LayoutPage } from './layout.page';
 
-describe('DogMenuComponent', () => {
-  let component: DogMenuComponent;
-  let fixture: ComponentFixture<DogMenuComponent>;
+describe('LayoutPage', () => {
+  let component: LayoutPage;
+  let fixture: ComponentFixture<LayoutPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DogMenuComponent ],
+      declarations: [ LayoutPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DogMenuComponent);
+    fixture = TestBed.createComponent(LayoutPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

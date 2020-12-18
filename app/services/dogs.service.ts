@@ -16,6 +16,7 @@ import { AuthService } from './auth.service';
 export class DogsService {
 
   private dogsCollection: AngularFirestoreCollection<Dog>;
+  defaultTextColor = '#FFFFFF';
   unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -26,10 +27,18 @@ export class DogsService {
     this.dogsCollection = this.afStore.collection('dogs');
   }
 
+
+  logOut(){
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
   addDog(dog: Dog){
     dog.isRemoved = false;
-    dog.colorText = '#FFFFFF';
+    dog.colorText = this.defaultTextColor;
     dog.uid = this.authService.getUserId();
+
+    if (dog.color){ dog.colorText = environment.textColors[dog.color]; }
 
     return this.dogsCollection.add(dog);
   }
@@ -44,7 +53,7 @@ export class DogsService {
 
   getDog(dogId: string): Observable<Dog> {
     return this.dogsCollection.doc<Dog>(dogId).valueChanges().pipe(
-      take(1), map(dog => {
+      take(1), takeUntil(this.unsubscribe), map(dog => {
         dog.id = dogId;
         return dog;
       })
@@ -60,12 +69,14 @@ export class DogsService {
   }
 
   updateDog(dogId: string, formData: any){
+    if (formData.color){ formData.colorText = environment.textColors[formData.color]; }
+    else { formData.colorText = this.defaultTextColor; }
     return this.afStore.doc('dogs/' + dogId).update(formData);
   }
 
   updateWeightsColor(dogId: string, newColor: string){
     this.afStore.collection('weights', ref => ref.where('dog', '==', dogId))
-    .valueChanges({ idField: 'id' }).subscribe(data => {
+    .valueChanges({ idField: 'id' }).pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       data.forEach(weight => {
         this.afStore.doc('weights/' + weight.id).set({ borderColor: newColor }, { merge: true });
       });

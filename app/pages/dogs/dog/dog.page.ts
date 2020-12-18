@@ -20,7 +20,8 @@ export class DogPage implements OnInit {
   microchip = {'num': '', 'provider' : '', 'url': ''};
   age: number;
   birthDate: string;
-  health: any;
+  health : any;
+  healthData = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -61,11 +62,23 @@ export class DogPage implements OnInit {
         // console.log(this.dog);
       });
 
+      let bvaSeen = 0
+      let hipsSeen = 0
       this.dogsService.getHealthData(this.dog.id).valueChanges().subscribe(data =>{
         // console.log(data);
-        this.health = data;
-        console.log(this.health);
+        for (let entry of data) {
+            if (!bvaSeen && entry.type == 'bva-eye'){
+              bvaSeen = 1;
+              this.healthData.push({label: 'BVA Eye Test', note : moment(entry.date.toDate()).format('DD/MM/YY') });
+            }
+            if (!hipsSeen && entry.type == 'hip-score'){
+              console.log(entry);
+              hipsSeen = 1;
+              this.healthData.push({label: 'Hip Score', note : entry.result});
+            }
+          }
       });
+      // console.log(this.healthData);
     });
   }
 
