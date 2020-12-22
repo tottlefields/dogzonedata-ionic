@@ -28,4 +28,8 @@ export class GeneralService {
     return new Blob(byteArrays, { type: contentType });
   }
 
+  capitalizeWords(s: string) {
+    return s.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+  }
+
 }
