@@ -12,6 +12,7 @@ import { DogsService } from 'src/app/services/dogs.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AddWeightComponent } from './add-weight/add-weight.component';
 import { map } from 'rxjs/operators';
+import { GeneralService } from 'src/app/services/general.service';
 
 @Component({
   selector: 'app-stats',
@@ -35,7 +36,8 @@ export class StatsPage implements OnInit, OnDestroy {
     public authService: AuthService,
     private router: Router,
     private modalCtrl: ModalController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private generalService: GeneralService
     ) {}
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class StatsPage implements OnInit, OnDestroy {
       for (let dog of this.dogs) {
         if (!this.dogLookup[dog.id]) {
           this.dogLookup[dog.id] = {
-            label: dog.name,
+            label: this.generalService.capitalizeWords(dog.name),
             borderColor: dog.color,
             isRemoved: dog.isRemoved
           };

@@ -18,7 +18,7 @@
         <ion-item>
           <ion-label>Dog</ion-label>
           <ion-select interface="popover" ngModel name="dog" required>
-            <ion-select-option *ngFor="let dog of dogs | async" [value]="dog">{{ dog.name }}</ion-select-option>
+            <ion-select-option *ngFor="let dog of dogs | async" [value]="dog">{{ dog.name| titlecase }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
