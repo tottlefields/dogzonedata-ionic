@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 
@@ -21,9 +21,20 @@ export class EditDogPage implements OnInit, OnDestroy {
   dogColors: any;
   dogColor = '#000000';
   textColor = '#FFFFFF';
+  cssColor = 'dzd-black';
+  genericPaw = '../../assets/img/generic-paw.png';
   chipProviders: any;
+  sportsVisible = false;
+  sportsList: string[];
   Object = Object;
   @ViewChild('imgPicker', { static: false }) imgPicker: ImagePickerComponent;
+
+  CHECK_LIST = [];
+  //   { sport: 'Agility', checked: false },
+  //   { sport: 'Canicross', checked: false },
+  //   { sport: 'Flyball', checked: false },
+  //   { sport: 'Obedience', checked: false }
+  // ];
 
   constructor(
     private route: ActivatedRoute,
@@ -43,38 +54,27 @@ export class EditDogPage implements OnInit, OnDestroy {
 
       this.dogColors = environment.dogColors;
       this.chipProviders = environment.microchipProviders;
-      // console.log(this.chipProviders);
+      this.sportsList = environment.dogSports;
+
+      this.sportsList.forEach(s => {
+        this.CHECK_LIST.push({ sport : s, checked : false})
+      });
 
       this.form = new FormGroup({
-        kcName: new FormControl(null, {
-          updateOn: 'blur'
-        }),
-        name: new FormControl(null, {
-          updateOn: 'blur',
-          validators: [Validators.required]
-        }),
-        sex: new FormControl(null, {
-          updateOn: 'blur'
-        }),
-        microchipNum: new FormControl(null, {
-          updateOn: 'blur'
-        }),
-        chipProvider: new FormControl(null, {
-          updateOn: 'blur'
-        }),
-        breed: new FormControl(null, {
-          updateOn: 'blur',
-          validators: [Validators.required]
-        }),
-        dateOfBirth: new FormControl(null, {
-          updateOn: 'blur',
-          validators: [Validators.required]
-        }),
-        color: new FormControl(null, {
-          updateOn: 'blur',
-        }),
+        kcName: new FormControl('', { updateOn: 'blur' }),
+        name: new FormControl('', { updateOn: 'blur', validators: [Validators.required] }),
+        sex: new FormControl(null, { updateOn: 'blur' }),
+        microchipNum: new FormControl(null, { updateOn: 'blur' }),
+        chipProvider: new FormControl(null, { updateOn: 'blur' }),
+        breed: new FormControl(null, { updateOn: 'blur', validators: [Validators.required] }),
+        dateOfBirth: new FormControl(null, { updateOn: 'blur', validators: [Validators.required] }),
+        color: new FormControl(null, { updateOn: 'blur', }),
         dob: new FormControl(null),
-        imageUrl: new FormControl(null)
+        imageUrl: new FormControl(null),
+        sportsDog: new FormControl(null),
+        breedingBitch: new FormControl(null),
+        healthTested: new FormControl(null),
+        sportsList: new FormArray([])
       });
 
       this.dogsService.getDog(paramMap.get('dogId')).subscribe(dog => {
@@ -87,7 +87,17 @@ export class EditDogPage implements OnInit, OnDestroy {
           this.imgPicker.dogColor = dog.color;
           this.dogColor = dog.color;
         }
-        if (dog.colorText){ this.textColor = dog.colorText; }
+        if (dog.cssColor) {
+          this.cssColor = dog.cssColor;
+        }
+        if (dog.colorText){ 
+          this.textColor = dog.colorText;
+          this.imgPicker.textColor = dog.colorText;
+          if (dog.colorText == '#000000'){
+            this.genericPaw = '../../assets/img/generic-paw-black.png';
+            if (!dog.imageUrl){ this.imgPicker.selectedImage = '../../assets/img/generic-photo-black.png'; }
+          }
+        }
         this.form.patchValue({name : dog.name});
         this.form.get('kcName').setValue(dog.kcName);
         this.form.get('sex').setValue(dog.sex);
@@ -106,11 +116,56 @@ export class EditDogPage implements OnInit, OnDestroy {
         this.form.get('chipProvider').setValue(this.dog.microchip.provider);
         this.form.get('color').setValue(dog.color);
         this.form.get('dateOfBirth').setValue(dog.dob.toDate().toISOString());
+
+        // this.dog.sportsDog = true;
+        // this.dog.healthTested = true;
+        // this.dog.breedingBitch = true;
+        // this.dog.sportsList = ['Agility', 'Flyball'];
+
+        if (this.dog.sportsDog){
+          this.form.get('sportsDog').setValue(this.dog.sportsDog);
+          this.sportsVisible = true;
+          if (this.dog.sportsList.length > 0){
+            this.CHECK_LIST.forEach(o => {
+              if (this.dog.sportsList.includes(o.sport)){ o.checked = true; }
+            });
+          }
+        }
+        if (this.dog.healthTested){ this.form.get('healthTested').setValue(this.dog.healthTested); }
+        if (this.dog.breedingBitch){ this.form.get('breedingBitch').setValue(this.dog.breedingBitch); }
+
       });
     });
   }
 
   ngOnDestroy(): void { }
+
+  onLoadCheckboxStatus() {
+    // const checkboxArrayList: FormArray = this.form.get('sportsList') as FormArray;
+    this.CHECK_LIST.forEach(o => {
+      if (this.dog.sportsList.includes(o.sport)){ o.checked = true; }
+      // this.updateCheckControl(checkboxArrayList, o);
+    })
+  }
+
+  updateCheckControl(cal, o) {
+    if (o.checked) {
+      cal.push(new FormControl(o.value));
+    } else {
+      cal.controls.forEach((item: FormControl, index) => {
+        if (item.value == o.value) {
+          cal.removeAt(index);
+          return;
+        }
+      });
+    }
+  }
+
+  onSelectionChange(e, i) {
+    const checkboxArrayList: FormArray = this.form.get('sportsList') as FormArray;
+    this.CHECK_LIST[i].checked = e.target.checked;
+    this.updateCheckControl(checkboxArrayList, e.target);
+  }
 
   async onImagePicked(imageData: string | File){
     let imageFile;
@@ -154,15 +209,27 @@ export class EditDogPage implements OnInit, OnDestroy {
     this.dogColor = event.detail.value;
     this.imgPicker.dogColor = this.dogColor;
     this.textColor = environment.textColors[this.dogColor];
+    if (this.textColor == '#000000'){
+      this.genericPaw = '../../assets/img/generic-paw-black.png';
+      if (!this.dog.imageUrl){ this.imgPicker.selectedImage = '../../assets/img/generic-photo-black.png'; }
+    }
+    else{
+      this.genericPaw = '../../assets/img/generic-paw.png';
+      if (!this.dog.imageUrl){ this.imgPicker.selectedImage = '../../assets/img/generic-photo.png'; }
+    }
+    environment.dogColors.forEach(c => {
+      if (c.code == this.dogColor){
+        this.cssColor = c.cssColor;
+      }
+    });
+  }
+
+  toggleSportsList(event){
+    this.sportsVisible = event.detail.checked;
   }
 
   updateDog() {
     if (!this.form.valid) { return; }
-
-    if (this.dog.color !== this.form.value.color){
-      // console.log('dog colour changed... need to update the weights documents...');
-      // this.dogsService.updateWeightsColor(this.dog.id, this.form.value.color);
-    }
 
     this.form.value.dob = new Date(this.form.value.dateOfBirth);
     let dog = this.form.value;
@@ -173,6 +240,11 @@ export class EditDogPage implements OnInit, OnDestroy {
     delete dog.microchipNum;
     delete dog.chipProvider;
 
+    dog.sportsList.sort(function (a, b) {
+      return a.localeCompare(b); //using String.prototype.localCompare()
+    });
+
+    // console.log(dog);
     this.dogsService.updateDog(this.dog.id, dog);
     this.navCtrl.navigateBack(['/app/dzd/dogs/', this.dog.id]);
   }

@@ -19,6 +19,13 @@ export class LayoutPage implements OnInit {
 
   ngOnInit() {
     this.dogs = this.dogsService.getDogs();
+  } 
+  
+  validatePaw(color: string){
+    if (color == '#000000'){
+      return '../../assets/img/generic-paw-black.png';
+    }
+    return '../../assets/img/generic-paw.png';
   }
 
 }

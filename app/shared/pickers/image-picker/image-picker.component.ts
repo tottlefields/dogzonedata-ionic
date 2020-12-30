@@ -10,11 +10,16 @@ export class ImagePickerComponent implements OnInit {
 
   @Output() imagePick = new EventEmitter<string>();
   selectedImage = '../../assets/img/generic-photo.png';
-  dogColor: string;
+  dogColor = '#000000';
+  textColor = '#FFFFFF';
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.textColor = '#000000'){
+      this.selectedImage = '../../assets/img/generic-photo-black.png'
+    }
+  }
 
   onPickImage(){
     if (!Capacitor.isPluginAvailable('Camera')){

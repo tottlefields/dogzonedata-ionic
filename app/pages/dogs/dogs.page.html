@@ -16,11 +16,11 @@
       <ion-col size-xs="12" size-md="6" size-xl="4" class="ion-no-padding" *ngFor="let dog of dogs | async">
         <ion-card button="true" color="light" class="ion-margin" [routerLink]="['/app/dzd/dogs/', dog.id]">
           <ion-card-header>
-          <ion-avatar class="ion-float-right ion-margin-start dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color">
+          <ion-avatar class="ion-float-right ion-margin-start dogAvatar" [style.border-color]="validateColor(dog.color)" [style.background-color]="validateColor(dog.color)">
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl" width="100px" height="100px" ></ion-img>
-            <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png" width="100px" height="100px" ></ion-img></ng-template>
+            <ng-template #genericImg><ion-img [src]="validatePaw(dog?.colorText)" width="100px" height="100px" ></ion-img></ng-template>
           </ion-avatar>
-            <ion-card-title class="ion-text-uppercase" [style.color]="dog.color">{{ dog.name }}</ion-card-title>
+            <ion-card-title class="ion-text-uppercase" [style.color]="validateColor(dog.color)">{{ dog.name }}</ion-card-title>
             <ion-card-subtitle>{{ dog.breed }}</ion-card-subtitle>
           </ion-card-header>
             <ion-card-content>

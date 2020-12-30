@@ -1,12 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { NavController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController } from '@ionic/angular';
 import { Chart } from 'chart.js';
 import * as moment from 'moment';
 
 import { Dog } from 'src/app/models/dog.interface';
 import { DogsService } from 'src/app/services/dogs.service';
+import { AddWeightComponent } from '../../stats/add-weight/add-weight.component';
 
 @Component({
   selector: 'app-weights',
@@ -23,10 +25,13 @@ export class WeightsPage implements OnInit, OnDestroy {
   minValue = 100;
   maxValue = 0;
   screen: string;
+  formData: NgForm;
   
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
+    private loadingCtrl: LoadingController,
     private dogsService: DogsService
     ) { }
 
@@ -62,8 +67,36 @@ export class WeightsPage implements OnInit, OnDestroy {
     });
   }
 
-  onShowAddWeightModal() {
-    console.log('TODO: need to be able to add a weight on the dog\'s weight page');
+  async onShowAddWeightModal() {
+    console.log('adding weight from dog page...');
+    this.modalCtrl
+      .create({ component: AddWeightComponent, componentProps: { dog: this.dog } })
+      .then((modalEl) => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(async (resultData) => {
+        // console.log(resultData);
+        this.formData = resultData.data;
+        if (resultData.role === 'addWeight') {
+          // let dogData = this.formData.value.dog;
+          const dogId = this.dog.id;
+          const date = new Date(this.formData.value.date);
+          const weight = this.formData.value.weight;
+          // const name = this.dog.name;
+          // const color = this.dog.color;
+
+          const loading = await this.loadingCtrl.create({
+            message: 'Adding new weight record...'
+          });
+
+          this.dogsService.addWeightRecord(dogId, date, weight)
+            .then(() => { this.dogsService.updateWeights(dogId); })
+            .then(() => { loading.dismiss(); },
+              error => { console.error(error); }
+            );
+        }
+      });
   }
 
   updateChart(data) {

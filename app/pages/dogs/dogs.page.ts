@@ -83,4 +83,18 @@ export class DogsPage implements OnInit {
       });
   }
 
+  validateColor(color: string){
+    if (color == '#F5F5F5'){
+      return '#FFFFFF';
+    }
+    return color;
+  }
+
+  validatePaw(color: string){
+    if (color == '#000000'){
+      return '../../assets/img/generic-paw-black.png';
+    }
+    return '../../assets/img/generic-paw.png';
+  }
+
 }

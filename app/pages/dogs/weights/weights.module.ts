@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { WeightsPageRoutingModule } from './weights-routing.module';
 
 import { WeightsPage } from './weights.page';
+import { AddWeightComponent } from '../../stats/add-weight/add-weight.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { WeightsPage } from './weights.page';
     IonicModule,
     WeightsPageRoutingModule
   ],
-  declarations: [WeightsPage]
+  declarations: [WeightsPage, AddWeightComponent],
+  entryComponents: [AddWeightComponent]
 })
 export class WeightsPageModule {}

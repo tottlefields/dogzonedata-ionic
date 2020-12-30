@@ -62,7 +62,7 @@
  
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary" (click)="onShowAddWeightModal()">
+    <ion-fab-button color="primary" (click)="onShowAddWeightModal()" [color]="dog?.cssColor">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

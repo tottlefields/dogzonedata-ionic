@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="ion-color" [style.background-color]="dogColor" [style.color]="textColor">
+  <ion-toolbar class="ion-color" [color]="cssColor">
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="['/app/dzd/dogs/', dog?.id]"></ion-back-button>
     </ion-buttons>
@@ -16,74 +16,109 @@
   <form [formGroup]="form">
     <ion-grid>
       <ion-row>
-        <ion-col size-xs="4" size-sm="3">
-          <app-image-picker (imagePick)="onImagePicked($event)" #imgPicker></app-image-picker>
+        <ion-col size="12" size-md="7">
+          <ion-grid>
+            <ion-row>
+              <ion-col size-xs="4" size-sm="3">
+                <app-image-picker (imagePick)="onImagePicked($event)" #imgPicker></app-image-picker>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">KC Name</ion-label>
+                  <ion-input type="text" autocomplete="off" autocorrect="off" formControlName="kcName" class="ion-text-capitalize"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">Name</ion-label>
+                  <ion-input type="text" autocomplete="off" autocorrect="off" formControlName="name" class="ion-text-capitalize"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">Sex</ion-label>
+                  <ion-select interface="popover" formControlName="sex">
+                    <ion-select-option value="Dog">Dog</ion-select-option>
+                    <ion-select-option value="Bitch">Bitch</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label>Breed</ion-label>
+                  <ion-input type="text" autocomplete="on" autocorrect="on" formControlName="breed" class="ion-text-capitalize ion-text-right"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label>Date of Birth</ion-label>
+                  <ion-datetime formControlName="dateOfBirth"></ion-datetime>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12" size-md="6" size-lg="12" size-xl="6">
+                <ion-item>
+                  <ion-label>Microchip</ion-label>
+                  <ion-input class="ion-text-right" type="number" inputmode="numeric" autocomplete="off" autocorrect="off" formControlName="microchipNum"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="6" size-lg="12" size-xl="6">
+                <ion-item>
+                  <ion-label>Chip Provider</ion-label>
+                  <ion-select formControlName="chipProvider" interface="popover">
+                    <ion-select-option *ngFor="let c of Object.keys(chipProviders)" value="{{ c }}">{{ c }}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-align-items-center">
+              <ion-col size="10">
+                <ion-item>
+                  <ion-label position="floating">Signature Colour</ion-label>
+                  <ion-select formControlName="color" (ionChange)="changeDogColor($event)" interface="popover">
+                    <ion-select-option *ngFor="let c of dogColors" value="{{ c.code }}">{{ c.color }}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size="2" style="display: flex; justify-content: center" class="ion-padding-top">
+                <ion-avatar class="ion-float-right dogAvatar" [style.border-color]="dogColor" [style.background-color]="dogColor">
+                  <ion-img [src]="genericPaw" width="50px" height="50px"></ion-img>
+                </ion-avatar>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label position="floating">KC Name</ion-label>
-            <ion-input type="text" autocomplete="off" autocorrect="off" formControlName="kcName" class="ion-text-capitalize"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="floating">Name</ion-label>
-            <ion-input type="text" autocomplete="off" autocorrect="off" formControlName="name" class="ion-text-capitalize"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="floating">Sex</ion-label>
-            <ion-select interface="popover" formControlName="sex">
-              <ion-select-option value="Dog">Dog</ion-select-option>
-              <ion-select-option value="Bitch">Bitch</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        <ion-col size="12">
-          <ion-item>
-            <ion-label>Breed</ion-label>
-            <ion-input type="text" autocomplete="on" autocorrect="on" formControlName="breed" class="ion-text-capitalize ion-text-right"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="12">
-          <ion-item>
-            <ion-label>Date of Birth</ion-label>
-            <ion-datetime formControlName="dateOfBirth"></ion-datetime>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12" size-md="6">
-          <ion-item>
-            <ion-label>Microchip</ion-label>
-            <ion-input class="ion-text-right" type="number" inputmode="numeric" autocomplete="off" autocorrect="off" formControlName="microchipNum"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="12" size-md="6">
-          <ion-item>
-            <ion-label>Chip Provider</ion-label>
-            <ion-select formControlName="chipProvider" interface="popover">
-              <ion-select-option *ngFor="let c of Object.keys(chipProviders)" value="{{ c }}">{{ c }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-align-items-center">
-        <ion-col size="10">
-          <ion-item>
-            <ion-label position="floating">Signature Colour</ion-label>
-            <ion-select formControlName="color" (ionChange)="changeDogColor($event)" interface="popover">
-              <ion-select-option *ngFor="let c of dogColors" value="{{ c.code }}">{{ c.color }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        <ion-col size="2" style="display: flex; justify-content: center" class="ion-padding-top">
-          <ion-avatar class="ion-float-right dogAvatar" [style.border-color]="dogColor" [style.background-color]="dogColor">
-            <ion-img src="../../assets/img/generic-paw.png" width="50px" height="50px"></ion-img>
-          </ion-avatar>
+
+        <ion-col size="12" size-md="5">
+          <ion-list>
+            <ion-list-header [color]="dog?.cssColor">
+              Other Dog Records
+            </ion-list-header>
+            <ion-item>
+              <ion-label>Health Tested</ion-label>
+              <ion-toggle slot="start" formControlName="healthTested" [color]="dog?.cssColor"></ion-toggle>
+            </ion-item>
+            <ion-item *ngIf="dog?.sex == 'Bitch'">
+              <ion-label>Breeding Bitch</ion-label>
+              <ion-toggle slot="start" formControlName="breedingBitch" [color]="dog?.cssColor"></ion-toggle>
+            </ion-item>
+            <ion-item>
+              <ion-label>Training/Competing</ion-label>
+              <ion-toggle slot="start" formControlName="sportsDog" (ionChange)="toggleSportsList($event)" [color]="dog?.cssColor"></ion-toggle>
+            </ion-item>
+
+            <div [hidden]=!sportsVisible style="padding-left: 75px;">
+              <ion-list class="small-list">
+                <ion-item *ngFor="let item of CHECK_LIST; let i=index">
+                  <ion-label>{{ item.sport }}</ion-label>
+                  <ion-checkbox slot="end" [value]="item.sport" [checked]="item.checked" (ionChange)="onSelectionChange($event,i)" [color]="dog?.cssColor"></ion-checkbox>
+                </ion-item>
+              </ion-list>
+            </div>
+          </ion-list>
         </ion-col>
       </ion-row>
     </ion-grid>

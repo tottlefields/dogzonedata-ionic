@@ -12,6 +12,7 @@ import { faStackOverflow, faGithub, faMedium } from '@fortawesome/free-brands-sv
 import { DogPageRoutingModule } from './dog-routing.module';
 
 import { DogPage } from './dog.page';
+import { AddWeightComponent } from '../../stats/add-weight/add-weight.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { DogPage } from './dog.page';
     DogPageRoutingModule,
     FontAwesomeModule
   ],
-  declarations: [DogPage]
+  declarations: [DogPage, AddWeightComponent],
+  entryComponents: [AddWeightComponent]
 })
 export class DogPageModule {
   constructor(private library: FaIconLibrary) {

@@ -33,7 +33,7 @@
         <ion-item *ngFor="let dog of dogs" [routerLink]="['/app/dzd/dogs/weights/', dog.id]" routerDirection="forward">
           <ion-avatar class="dogAvatar" [style.border-color]="dog.color" [style.background-color]="dog.color" slot="start">
             <ion-img *ngIf="dog.imageUrl; else genericImg" [src]="dog.imageUrl"></ion-img>
-            <ng-template #genericImg><ion-img src="../../assets/img/generic-paw.png"></ion-img></ng-template>
+            <ng-template #genericImg><ion-img [src]="validatePaw(dog?.colorText)" ></ion-img></ng-template>
           </ion-avatar>
           <ion-label>
             <ion-grid>

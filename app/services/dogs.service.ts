@@ -9,6 +9,7 @@ import { Observable, Subject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { GeneralService } from './general.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,14 @@ export class DogsService {
 
   private dogsCollection: AngularFirestoreCollection<Dog>;
   defaultTextColor = '#FFFFFF';
+  defaultCssColor = 'dzd-black';
   unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private afStore: AngularFirestore,
     private afStorage: AngularFireStorage,
-    private authService: AuthService
+    private authService: AuthService,
+    private generalService: GeneralService
   ) {
     this.dogsCollection = this.afStore.collection('dogs');
   }
@@ -36,9 +39,14 @@ export class DogsService {
   addDog(dog: Dog){
     dog.isRemoved = false;
     dog.colorText = this.defaultTextColor;
+    dog.cssColor = this.defaultCssColor;
     dog.uid = this.authService.getUserId();
 
-    if (dog.color){ dog.colorText = environment.textColors[dog.color]; }
+    if (dog.color){
+      dog.colorText = environment.textColors[dog.color];
+      let color = this.generalService.getColor(dog.color);
+      if (color){ dog.cssColor = color.cssColor; }
+    }
 
     return this.dogsCollection.add(dog);
   }
@@ -69,12 +77,16 @@ export class DogsService {
   }
 
   updateDog(dogId: string, formData: any){
-    if (formData.color){ formData.colorText = environment.textColors[formData.color]; }
-    else { formData.colorText = this.defaultTextColor; }
+    if (formData.color){
+      formData.colorText = environment.textColors[formData.color];
+      let color = this.generalService.getColor(formData.color);
+      if (color){ formData.cssColor = color.cssColor; }
+    }
+    else { formData.colorText = this.defaultTextColor; formData.cssColor = this.defaultCssColor; }
     return this.afStore.doc('dogs/' + dogId).update(formData);
   }
 
-  updateWeightsColor(dogId: string, newColor: string){
+/*   updateWeightsColor(dogId: string, newColor: string){
     this.afStore.collection('weights', ref => ref.where('dog', '==', dogId))
     .valueChanges({ idField: 'id' }).pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       data.forEach(weight => {
@@ -83,7 +95,7 @@ export class DogsService {
       // if (data[0]) { this.afStore.doc('dogs/' + dogId).set({ currWeight: data[0] }, { merge: true }); }
       // if (data[1]) { this.afStore.doc('dogs/' + dogId).set({ prevWeight: data[1] }, { merge: true }); }
     });
-  }
+  } */
 
   async uploadImage(image: File, uid: string){
     const randomId = Math.random().toString(36).substring(2, 8);
@@ -113,11 +125,9 @@ export class DogsService {
     ref => ref.where('date', '>=', moment().subtract(months, 'months').toDate()).orderBy('date'));
   }
 
-  addWeightRecord(dogId: string, date: Date, weight: number, name: string, color: string): Promise<void> {
+  addWeightRecord(dogId: string, date: Date, weight: number): Promise<void> {
     const uid = this.authService.getUserId();
     const id = this.afStore.createId();
-    // this.afStore.collection('weights/').add({
-    //  date, weight, uid, dog: dogId, label: name, borderColor: color, validDog: true });
     this.afStore.collection('weights/').add({date, weight, uid, dog: dogId});
     return this.afStore.doc('dogs/' + dogId + '/weights/' + id).set({ date, weight });
   }
@@ -130,41 +140,11 @@ export class DogsService {
     });
   }
 
-
-  /* getDogList(uid: string): AngularFirestoreCollection<Dog> {
-    return this.afStore.collection('dogs', ref => ref.where('uid', '==', uid).where('isRemoved', '==', false).orderBy('dob'));
+  getUpcomingForDog(dogId: string){
+    return this.afStore.collection('events', ref => ref.where('dogs', 'array-contains', dogId)
+    .where('date', '<=', moment().add(12, 'months').toDate())
+    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
   }
-
-  getDog(dogId: string): AngularFirestoreDocument<Dog> {
-    return this.afStore.collection('dogs').doc(dogId);
-  }
-
-  getRecentWeights(dogId: string): AngularFirestoreCollection<DogWeight> {
-    return this.afStore.collection('dogs').doc(dogId).collection(
-      'weights', ref => ref.where('date', '>=', moment().subtract(6, 'months').toDate()).orderBy('date', 'desc'));
-  }
-
-
-  createDog(
-    uid: string,
-    name: string,
-    kcName: string,
-    breed: string,
-    color: string,
-    imageUrl: string,
-    dob: Date,
-    sex: string,
-    microchip: string
-  ): Promise<void> {
-    const id = this.afStore.createId();
-    const colorText = '#FFFFFF';
-    // console.log(environment.textColors);
-    const isRemoved = false;
-
-    console.log(id, name, kcName, breed, color, dob, colorText, uid, sex, isRemoved, imageUrl, microchip);
-
-    return this.afStore.doc('dogs/' + id).set({
-      id, name, kcName, breed, color, dob, colorText, uid, sex, isRemoved, imageUrl, microchip
-    });
-  } */
 }

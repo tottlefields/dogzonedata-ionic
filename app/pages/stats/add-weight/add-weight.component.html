@@ -5,7 +5,8 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Record a Dog's Weight</ion-title>
+    <ion-title *ngIf="!dog">Record a Dog's Weight</ion-title>
+    <ion-title *ngIf="dog">Record a Weight for {{ dog.name | titlecase  }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,12 +14,12 @@
 <ion-content>
 <form #weightForm="ngForm"> 
   <ion-grid>
-    <ion-row>
+    <ion-row *ngIf="!dog">
       <ion-col>
         <ion-item>
           <ion-label>Dog</ion-label>
           <ion-select interface="popover" ngModel name="dog" required>
-            <ion-select-option *ngFor="let dog of dogs | async" [value]="dog">{{ dog.name| titlecase }}</ion-select-option>
+            <ion-select-option *ngFor="let dog of dogs | async" [value]="dog">{{ dog.name | titlecase }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>

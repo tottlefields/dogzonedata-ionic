@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,16 @@ export class GeneralService {
 
   capitalizeWords(s: string) {
     return s.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+  }
+
+  getColor(code: string){
+    let color = null;
+    environment.dogColors.forEach(c => {
+      if (c.code == code){
+        color = c;
+      }
+    });
+    return color;
   }
 
 }

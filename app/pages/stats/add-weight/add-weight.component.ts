@@ -3,6 +3,7 @@ import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { DogsService } from 'src/app/services/dogs.service';
+import { Dog } from 'src/app/models/dog.interface';
 
 @Component({
   selector: 'app-add-weight',
@@ -13,25 +14,21 @@ export class AddWeightComponent implements OnInit {
   public today: string;
   public dogs: any;
   public dogData = [];
+  dog: Dog;
 
   constructor(
     private modalCtrl: ModalController,
     public authService: AuthService,
-    private navParams: NavParams,
     private toastCtrl: ToastController,
     private dogsService: DogsService
     ) {
     this.today = new Date().toString();
     this.dogs = this.dogsService.getDogs();
-    // this.dogs = this.navParams.data.dogs;
-    // this.dogs.subscribe(result => {
-    //   result.forEach(dog => {
-    //     this.dogData[dog.id] = dog;
-    //   });
-    // });
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // console.log(this.dog);
+  }
 
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
@@ -39,8 +36,9 @@ export class AddWeightComponent implements OnInit {
 
   async onAddWeight(form: NgForm) {
     this.modalCtrl.dismiss(form, 'addWeight');
+    let name = (this.dog) ? this.dog.name : form.value.dog.name;
     const toast = await this.toastCtrl.create({
-      message: 'New weight record added for ' + form.value.dog.name,
+      message: 'New weight record added for ' + name,
       duration: 2500,
       cssClass: 'ion-text-center'
     });
