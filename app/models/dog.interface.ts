@@ -7,6 +7,7 @@ export interface Dog {
     breed: string;
     color: string;
     colorText: string;
+    cssColor: string;
     imageUrl: string;
     microchip?: object;
     dateOfBirth: Date;
@@ -18,4 +19,8 @@ export interface Dog {
     isRemoved: boolean;
     entire?: boolean;
     neuteredDate?: Date;
+    sportsDog?: boolean;
+    sportsList?: string[];
+    healthTested?: boolean;
+    breedingBitch?: boolean;
   }
