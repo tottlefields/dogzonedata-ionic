@@ -1,17 +1,14 @@
-import { Dog } from 'src/app/models/dog.interface';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { SegmentChangeEventDetail } from '@ionic/core';
 
-import { Chart } from 'chart.js';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { Chart } from 'chart.js';
 
 import { DogsService } from 'src/app/services/dogs.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AddWeightComponent } from './add-weight/add-weight.component';
-import { map } from 'rxjs/operators';
 import { GeneralService } from 'src/app/services/general.service';
 
 @Component({
@@ -42,7 +39,6 @@ export class StatsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stats = 'weights';
-    // this.dogs = this.dogsService.getDogs();
     this.dogsService.getDogs().subscribe(dogs => {
       this.dogs = dogs;
       for (let dog of this.dogs) {
@@ -58,6 +54,13 @@ export class StatsPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  validatePaw(color: string){
+    if (color == '#000000'){
+      return '../../assets/img/generic-paw-black.png';
+    }
+    return '../../assets/img/generic-paw.png';
   }
 
 /*   onSwitchSeg(event: CustomEvent<SegmentChangeEventDetail>) {
@@ -79,14 +82,14 @@ export class StatsPage implements OnInit, OnDestroy {
           const dogId = dogData.id;
           const date = new Date(this.formData.value.date);
           const weight = this.formData.value.weight;
-          const name = dogData.name;
-          const color = dogData.color;
+          // const name = dogData.name;
+          // const color = dogData.color;
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
 
-          this.dogsService.addWeightRecord(dogId, date, weight, name, color)
+          this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
             .then(() => { loading.dismiss(); },
               error => { console.error(error); }

@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { EditDogPageRoutingModule } from './edit-dog-routing.module';
 import { EditDogPage } from './edit-dog.page';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [

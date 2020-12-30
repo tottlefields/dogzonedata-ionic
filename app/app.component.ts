@@ -1,5 +1,5 @@
 import { AuthService } from 'src/app/services/auth.service';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Plugins, Capacitor } from '@capacitor/core';
 
 import { Platform } from '@ionic/angular';
@@ -19,14 +19,11 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    // private splashScreen: SplashScreen,
-    // private statusBar: StatusBar,
     private authService: AuthService,
     public dogsService: DogsService,
     public spService: SplitPaneService,
   ) {
     this.initializeApp();
-    // console.log('after app is initialised');
   }
 
   initializeApp() {
@@ -34,7 +31,6 @@ export class AppComponent {
       if (Capacitor.isPluginAvailable('SplashScreen')){
         Plugins.SplashScreen.hide();
       }
-      // console.log(this.dogMenu); // .updateDogList();
       // this.statusBar.styleDefault();
       // this.splashScreen.hide();
     });
