@@ -1,0 +1,15 @@
+ion-card-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+ion-item:last-child {
+  --inner-border-width: 0;
+}
+
+.eventDate {
+  /* margin: 13px 32px 13px 0px; */
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 0.8em;
+}
