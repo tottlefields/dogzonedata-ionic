@@ -1,0 +1,23 @@
+<ion-item lines="full" class="ion-align-items-center">
+  <div class="ion-text-center eventDate" slot="start">
+      <ion-text color="secondary">{{ event.date.toDate() | date: 'd' }}</ion-text><br />
+      <ion-text color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'MMM' }}</ion-text>
+  </div>
+  <ion-label>
+    <h2>
+      <fa-icon  *ngIf="event.type == 'birthday'" [icon]="['fas', 'birthday-cake']"></fa-icon>
+      {{ event.title }}
+      <span class="ion-margin-start" class="ion-hide-md-down">
+        <ion-chip *ngFor="let chip of event.chips" [color]="chip.cssColor" class="dog-chip"><ion-label>{{ chip.letter }}</ion-label></ion-chip>
+      </span>
+      <span class="ion-margin-start" class="ion-hide-md-up">
+        <fa-icon *ngFor="let color of event.colors" [icon]="['fas', 'circle']" [style.color]="color" style="margin:4px;"></fa-icon>
+      </span>
+    </h2>
+    <p>{{ event.location }}</p>
+  </ion-label>
+  <ion-item-options side="end">
+    <ion-item-option>Edit</ion-item-option>
+    <ion-item-option color="danger">Remove</ion-item-option>
+  </ion-item-options>
+</ion-item>
