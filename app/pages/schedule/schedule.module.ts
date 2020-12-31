@@ -7,14 +7,22 @@ import { IonicModule } from '@ionic/angular';
 import { SchedulePageRoutingModule } from './schedule-routing.module';
 
 import { SchedulePage } from './schedule.page';
+import { EventItemComponent } from './event-item/event-item.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faBirthdayCake, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SchedulePageRoutingModule
+    SchedulePageRoutingModule,
+    FontAwesomeModule
   ],
-  declarations: [SchedulePage]
+  declarations: [SchedulePage, EventItemComponent]
 })
-export class SchedulePageModule {}
+export class SchedulePageModule {
+  constructor(private library: FaIconLibrary) {
+    library.addIcons(faCircle, faBirthdayCake);
+  }
+}

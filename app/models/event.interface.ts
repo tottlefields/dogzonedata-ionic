@@ -5,6 +5,9 @@ export interface Event {
     month: string;
     dogs: string[];
     location?: string;
-    date: Date;
+    date: any;
     uid: string;
+    colors?: string[];
+    chips?: any[];
+    thisYear: boolean;
 }

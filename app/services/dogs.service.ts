@@ -10,6 +10,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { GeneralService } from './general.service';
+import { Event } from '../models/event.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -141,8 +142,16 @@ export class DogsService {
   }
 
   getUpcomingForDog(dogId: string){
-    return this.afStore.collection('events', ref => ref.where('dogs', 'array-contains', dogId)
-    .where('date', '<=', moment().add(12, 'months').toDate())
+    return this.afStore.collection<Event>('events', ref => ref.where('dogs', 'array-contains', dogId)
+    // .where('date', '<=', moment().add(12, 'months').toDate())
+    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
+  }
+
+  getEvents(){
+    const uid = this.authService.getUserId();
+    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('date', '<=', moment().add(12, 'months').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );

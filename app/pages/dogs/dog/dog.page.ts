@@ -89,6 +89,8 @@ export class DogPage implements OnInit {
       this.dogsService.getUpcomingForDog(this.dog.id).subscribe(data => {
         this.diaryItems = [];
         data.forEach(e => {
+          if (moment().diff(e.date.toDate(), 'years') == 0){ e.thisYear = true; }
+          else { e.thisYear = false; }
           this.diaryItems.push(e);
         })
       });
