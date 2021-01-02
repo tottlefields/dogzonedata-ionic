@@ -1,3 +1,4 @@
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
@@ -7,11 +8,31 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class DogPickerComponent implements OnInit {
   
-  // @Output() dogPick = new EventEmitter<string>();
   @Input() dogList: any;
+  @Input() form: FormGroup;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  
+  updateCheckControl(cal, o) {
+    if (o.checked) {
+      cal.push(new FormControl(o.value));
+    } else {
+      cal.controls.forEach((item: FormControl, index) => {
+        if (item.value == o.value) {
+          cal.removeAt(index);
+          return;
+        }
+      });
+    }
+  }
+
+  onSelectionChange(e, i) {
+    const checkboxArrayList: FormArray = this.form.get('dogsList') as FormArray;
+    this.dogList[i].checked = e.target.checked;
+    this.updateCheckControl(checkboxArrayList, e.target);
+  }
 
 }

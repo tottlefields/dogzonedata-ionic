@@ -8,7 +8,7 @@
         <ion-col *ngFor="let dog of dogList; let i=index" size="4">
           <ion-item lines="none">
             <ion-label>{{ dog.name | titlecase }}</ion-label>
-            <ion-checkbox slot="start" [value]="dog.id" [color]="dog.cssColor" [checked]="dog.checked"></ion-checkbox>
+            <ion-checkbox slot="start" [value]="dog.id" [color]="dog.cssColor" [checked]="dog.checked" (ionChange)="onSelectionChange($event,i)"></ion-checkbox>
           </ion-item>
         </ion-col>
       </ion-row>

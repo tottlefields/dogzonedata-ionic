@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActionSheetController, ModalController, LoadingController } from '@ionic/angular';
 
@@ -7,6 +7,7 @@ import { GeneralService } from 'src/app/services/general.service';
 import { AddEventComponent } from './add-event/add-event.component';
 import { AddReminderComponent } from './add-reminder/add-reminder.component';
 import { Event } from 'src/app/models/event.interface';
+// import { DogPickerComponent } from 'src/app/shared/pickers/dog-picker/dog-picker.component';
 
 @Component({
   selector: 'app-schedule',
@@ -21,6 +22,7 @@ export class SchedulePage implements OnInit {
   dogLookup = {};
   public dogs: any;
   formData: NgForm;
+  // @ViewChild('dogPicker', { static: false }) dogPicker: DogPickerComponent;
 
   constructor(
     private dogsService: DogsService,
@@ -135,24 +137,20 @@ export class SchedulePage implements OnInit {
       })
       .then(async (resultData) => {
         // console.log(resultData);
-        this.formData = resultData.data;
-        if (resultData.role === 'addWeight') {
-          let dogData = this.formData.value.dog;
-          const dogId = dogData.id;
-          const date = new Date(this.formData.value.date);
-          const weight = this.formData.value.weight;
-          // const name = dogData.name;
-          // const color = dogData.color;
+        if (resultData.role === 'addEvent') {
+          this.formData = resultData.data;
+          console.log(this.formData.value);
+          console.log(this.formData.value.date);
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
 
-          this.dogsService.addWeightRecord(dogId, date, weight)
+/*           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
             .then(() => { loading.dismiss(); },
               error => { console.error(error); }
-            );
+            ); */
         }
       });
   }

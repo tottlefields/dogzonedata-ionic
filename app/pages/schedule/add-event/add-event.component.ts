@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DogPickerComponent } from './../../../shared/pickers/dog-picker/dog-picker.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Dog } from 'src/app/models/dog.interface';
@@ -15,6 +16,8 @@ export class AddEventComponent implements OnInit {
   public dogs: any;
   dog: Dog;
   eventForm: FormGroup;
+  dogList = [];
+  @ViewChild('dogPicker', { static: false }) dogPicker: DogPickerComponent;
 
   constructor(
     private modalCtrl: ModalController,
@@ -32,6 +35,19 @@ export class AddEventComponent implements OnInit {
       title: new FormControl('', { updateOn: 'blur' }),
       date: new FormControl(this.today.toISOString(), { updateOn: 'blur', validators: [Validators.required] }),
       dogsList: new FormArray([])
+    });
+
+    const checkboxArrayList: FormArray = this.eventForm.get('dogsList') as FormArray;
+
+    this.dogs.subscribe(data => {
+      data.forEach((d: Dog) => {
+        let checkedBool = false;
+        if (this.dog && this.dog.id == d.id){ 
+          checkedBool = true;
+          checkboxArrayList.push(new FormControl(d.id));
+        }
+        this.dogList.push({ id: d.id, name: d.name, checked: checkedBool, cssColor: d.cssColor })
+      })
     });
   }
 

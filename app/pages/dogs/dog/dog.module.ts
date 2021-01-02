@@ -17,6 +17,7 @@ import { DatesCardComponent } from './dates-card/dates-card.component';
 import { AddReminderComponent } from '../../schedule/add-reminder/add-reminder.component';
 import { AddEventComponent } from '../../schedule/add-event/add-event.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DogPickerComponent } from 'src/app/shared/pickers/dog-picker/dog-picker.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     SharedModule
   ],
   declarations: [DogPage, AddWeightComponent, AddReminderComponent, AddEventComponent, DatesCardComponent],
-  entryComponents: [AddWeightComponent, AddReminderComponent, AddEventComponent]
+  entryComponents: [AddWeightComponent, AddReminderComponent, AddEventComponent, DogPickerComponent]
 })
 export class DogPageModule {
   constructor(private library: FaIconLibrary) {

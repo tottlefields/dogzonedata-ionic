@@ -13,6 +13,11 @@
 <ion-content>
 <form [formGroup]="eventForm"> 
   <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <app-dog-picker #dogPicker [dogList]="dogList" [form]="eventForm"></app-dog-picker>
+      </ion-col>
+    </ion-row>
 
   <ion-row>
     <ion-col>

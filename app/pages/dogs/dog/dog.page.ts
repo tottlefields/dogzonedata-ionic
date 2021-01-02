@@ -168,24 +168,20 @@ export class DogPage implements OnInit {
       })
       .then(async (resultData) => {
         // console.log(resultData);
-        this.formData = resultData.data;
-        if (resultData.role === 'addWeight') {
-          let dogData = this.formData.value.dog;
-          const dogId = dogData.id;
-          const date = new Date(this.formData.value.date);
-          const weight = this.formData.value.weight;
-          // const name = dogData.name;
-          // const color = dogData.color;
+        if (resultData.role === 'addEvent') {
+          this.formData = resultData.data;
+          console.log(this.formData.value);
+          console.log(this.formData.value.date);
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
 
-          this.dogsService.addWeightRecord(dogId, date, weight)
+/*           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
             .then(() => { loading.dismiss(); },
               error => { console.error(error); }
-            );
+            ); */
         }
       });
   }
@@ -198,25 +194,20 @@ export class DogPage implements OnInit {
         return modalEl.onDidDismiss();
       })
       .then(async (resultData) => {
-        console.log(resultData);
-        this.formData = resultData.data;
-        if (resultData.role === 'addWeight') {
-          let dogData = this.formData.value.dog;
-          const dogId = dogData.id;
-          const date = new Date(this.formData.value.date);
-          const weight = this.formData.value.weight;
-          // const name = dogData.name;
-          // const color = dogData.color;
+        if (resultData.role === 'addReminder') {
+          this.formData = resultData.data;
+          console.log(this.formData.value);
+
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
 
-          this.dogsService.addWeightRecord(dogId, date, weight)
+/*           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
             .then(() => { loading.dismiss(); },
               error => { console.error(error); }
-            );
+            ); */
         }
       });
   }
