@@ -1,0 +1,17 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Dog(s)</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="ion-no-padding">
+    <ion-grid>
+      <ion-row>
+        <ion-col *ngFor="let dog of dogList; let i=index" size="4">
+          <ion-item lines="none">
+            <ion-label>{{ dog.name | titlecase }}</ion-label>
+            <ion-checkbox slot="start" [value]="dog.id" [color]="dog.cssColor" [checked]="dog.checked"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>

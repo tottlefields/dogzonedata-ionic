@@ -11,6 +11,8 @@ import { DogsService } from 'src/app/services/dogs.service';
 import { GeneralService } from 'src/app/services/general.service';
 import { AddWeightComponent } from '../../stats/add-weight/add-weight.component';
 import { NgForm } from '@angular/forms';
+import { AddReminderComponent } from '../../schedule/add-reminder/add-reminder.component';
+import { AddEventComponent } from '../../schedule/add-event/add-event.component';
 
 @Component({
   selector: 'app-dog',
@@ -143,6 +145,68 @@ export class DogPage implements OnInit {
           const weight = this.formData.value.weight;
           // const name = this.dog.name;
           // const color = this.dog.color;
+
+          const loading = await this.loadingCtrl.create({
+            message: 'Adding new weight record...'
+          });
+
+          this.dogsService.addWeightRecord(dogId, date, weight)
+            .then(() => { this.dogsService.updateWeights(dogId); })
+            .then(() => { loading.dismiss(); },
+              error => { console.error(error); }
+            );
+        }
+      });
+  }
+
+  async onShowAddEventModal() {
+    this.modalCtrl
+      .create({ component: AddEventComponent, componentProps: { dog: this.dog } })
+      .then((modalEl) => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(async (resultData) => {
+        // console.log(resultData);
+        this.formData = resultData.data;
+        if (resultData.role === 'addWeight') {
+          let dogData = this.formData.value.dog;
+          const dogId = dogData.id;
+          const date = new Date(this.formData.value.date);
+          const weight = this.formData.value.weight;
+          // const name = dogData.name;
+          // const color = dogData.color;
+
+          const loading = await this.loadingCtrl.create({
+            message: 'Adding new weight record...'
+          });
+
+          this.dogsService.addWeightRecord(dogId, date, weight)
+            .then(() => { this.dogsService.updateWeights(dogId); })
+            .then(() => { loading.dismiss(); },
+              error => { console.error(error); }
+            );
+        }
+      });
+  }
+
+  async onShowAddReminderModal() {
+    this.modalCtrl
+      .create({ component: AddReminderComponent, componentProps: { dog: this.dog } })
+      .then((modalEl) => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(async (resultData) => {
+        console.log(resultData);
+        this.formData = resultData.data;
+        if (resultData.role === 'addWeight') {
+          let dogData = this.formData.value.dog;
+          const dogId = dogData.id;
+          const date = new Date(this.formData.value.date);
+          const weight = this.formData.value.weight;
+          // const name = dogData.name;
+          // const color = dogData.color;
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'

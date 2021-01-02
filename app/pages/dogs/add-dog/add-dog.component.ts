@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators} from '@angular/forms';
 
 import { environment } from 'src/environments/environment';
 import { ImagePickerComponent } from 'src/app/shared/pickers/image-picker/image-picker.component';
@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AddDogComponent implements OnInit {
   dogColor = '#000000';
-  form2: NgForm;
+  // form2: NgForm;
   form: FormGroup;
   @ViewChild('imgPicker', { static: false }) imgPicker: ImagePickerComponent;
 

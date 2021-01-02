@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -14,17 +14,22 @@ import { DogPageRoutingModule } from './dog-routing.module';
 import { DogPage } from './dog.page';
 import { AddWeightComponent } from '../../stats/add-weight/add-weight.component';
 import { DatesCardComponent } from './dates-card/dates-card.component';
+import { AddReminderComponent } from '../../schedule/add-reminder/add-reminder.component';
+import { AddEventComponent } from '../../schedule/add-event/add-event.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     DogPageRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SharedModule
   ],
-  declarations: [DogPage, AddWeightComponent, DatesCardComponent],
-  entryComponents: [AddWeightComponent]
+  declarations: [DogPage, AddWeightComponent, AddReminderComponent, AddEventComponent, DatesCardComponent],
+  entryComponents: [AddWeightComponent, AddReminderComponent, AddEventComponent]
 })
 export class DogPageModule {
   constructor(private library: FaIconLibrary) {

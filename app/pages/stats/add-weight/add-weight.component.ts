@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { DogsService } from 'src/app/services/dogs.service';
 import { Dog } from 'src/app/models/dog.interface';
 
@@ -18,7 +17,7 @@ export class AddWeightComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    public authService: AuthService,
+    // public authService: AuthService,
     private toastCtrl: ToastController,
     private dogsService: DogsService
     ) {

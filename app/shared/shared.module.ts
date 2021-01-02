@@ -5,15 +5,17 @@ import { IonicModule } from '@ionic/angular';
 // import { LocationPickerComponent } from './pickers/location-picker/location-picker.component';
 // import { MapModalComponent } from './map-modal/map-modal.component';
 import { ImagePickerComponent } from './pickers/image-picker/image-picker.component';
+import { DogPickerComponent } from 'src/app/shared/pickers/dog-picker/dog-picker.component';
 
 @NgModule({
   declarations: [
     // LocationPickerComponent,
     // MapModalComponent,
+    DogPickerComponent,
     ImagePickerComponent,
   ],
   imports: [CommonModule, IonicModule],
-  exports: [ImagePickerComponent]
+  exports: [ImagePickerComponent, DogPickerComponent]
   // exports: [LocationPickerComponent, MapModalComponent, ImagePickerComponent],
   // entryComponents: [MapModalComponent]
 })

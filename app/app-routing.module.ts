@@ -28,7 +28,7 @@ const routes: Routes = [
     path: 'app',
     ...canActivate(redirectUnauthorizedToLogin),
     loadChildren: () => import('./pages/layout/layout.module').then( m => m.LayoutPageModule)
-  }
+  },
 ];
 
 @NgModule({

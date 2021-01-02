@@ -20,11 +20,9 @@ export class DogsPage implements OnInit {
   formData: NgForm;
 
   constructor(
-    private afAuth: AngularFireAuth,
     private authService: AuthService,
     private dogsService: DogsService,
     private splitPaneService: SplitPaneService,
-    private router: Router,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController
   ) { }
@@ -35,7 +33,6 @@ export class DogsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    // console.log('entering dogs page');
     this.splitPaneService.setSplitPane(true);
   }
 

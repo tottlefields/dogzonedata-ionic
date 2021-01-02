@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="!dog">Add a New Event</ion-title>
+    <ion-title *ngIf="dog">Add New Event for {{ dog.name | titlecase  }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<form [formGroup]="eventForm"> 
+  <ion-grid>
+
+  <ion-row>
+    <ion-col>
+      <ion-button type="button" expand="block" (click)="onCancel()" color="danger">Cancel</ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button type="submit" expand="block" (click)="onAddEvent()" [disabled]="!eventForm.valid">Add Event</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+</form>
+</ion-content>

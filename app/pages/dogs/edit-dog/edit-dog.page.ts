@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { LoadingController, NavController } from '@ionic/angular';
 
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/services/auth.service';

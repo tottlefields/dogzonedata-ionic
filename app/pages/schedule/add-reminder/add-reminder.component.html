@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="!dog">Add a New Reminder</ion-title>
+    <ion-title *ngIf="dog">Add New Reminder for {{ dog.name | titlecase  }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="reminderForm"> 
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-input type="text" autocomplete="off" formControlName="title"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-item>
+            <ion-label>Date</ion-label>
+            <ion-datetime formControlName="date"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+<!--       <ion-row>
+        <ion-col size="12">
+          <app-dog-picker [dogList]="dogList" #dogPicker></app-dog-picker>
+        </ion-col>
+      </ion-row> -->
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Dog(s)</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <ion-grid>
+                <ion-row>
+                  <ion-col *ngFor="let dog of dogList; let i=index" size="4">
+                    <ion-item lines="none">
+                      <ion-label>{{ dog.name | titlecase }}</ion-label>
+                      <ion-checkbox slot="start" [value]="dog.id" [color]="dog.cssColor" [checked]="dog.checked"></ion-checkbox>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="button" expand="block" (click)="onCancel()" color="danger">Cancel</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button type="submit" expand="block" (click)="onAddReminder()" [disabled]="!reminderForm.valid">Add Reminder</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </form>
+</ion-content>

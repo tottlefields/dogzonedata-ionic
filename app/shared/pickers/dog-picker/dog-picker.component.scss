@@ -1,0 +1,15 @@
+.small-list > ion-item {
+  font-size:small;
+  --min-height: 30px;
+}
+
+ion-checkbox {
+  --size: 18px
+}
+
+ion-card-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+ion-card-header { padding-bottom: 0px; }

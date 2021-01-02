@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Event } from 'src/app/models/event.interface';
+import { NgForm } from '@angular/forms';
+import { ActionSheetController, ModalController, LoadingController } from '@ionic/angular';
+
 import { DogsService } from 'src/app/services/dogs.service';
 import { GeneralService } from 'src/app/services/general.service';
+import { AddEventComponent } from './add-event/add-event.component';
+import { AddReminderComponent } from './add-reminder/add-reminder.component';
+import { Event } from 'src/app/models/event.interface';
 
 @Component({
   selector: 'app-schedule',
@@ -10,22 +15,24 @@ import { GeneralService } from 'src/app/services/general.service';
 })
 export class SchedulePage implements OnInit {
   type: string;
-  // diaryItems: Event[];
   public diaryItems = [];
   public reminders = [];
   public events = [];
   dogLookup = {};
   public dogs: any;
+  formData: NgForm;
 
   constructor(
     private dogsService: DogsService,
-    private generalService: GeneralService
+    private generalService: GeneralService,
+    private actionSheetController: ActionSheetController,
+    private modalCtrl: ModalController,
+    private loadingCtrl: LoadingController,
   ) {
     this.type = 'calendar';
   }
 
   ngOnInit() {
-
     this.dogsService.getDogs().subscribe(dogs => {
       this.dogs = dogs;
       for (let dog of this.dogs) {
@@ -65,13 +72,14 @@ export class SchedulePage implements OnInit {
         }
       );
     });
-    
-    
-
     // console.log(this.diaryItems);
     // if (event.type == 'reminder'){ this.reminders.push(event); }
     // else { this.events.push(event); }
     // console.log(this.events);
+  }
+
+  segmentChanged(event) {
+    this.type = event.detail.value;
   }
 
   myHeaderFn(record: Event, recordIndex: number, records: Event[]) {
@@ -86,8 +94,100 @@ export class SchedulePage implements OnInit {
     return null;
   }
 
-  onShowAddEventModal() {
-    console.log('add new event...');
+
+
+  async addEvent() {
+    const actionSheet = await this.actionSheetController.create({
+      // header: ''
+      buttons : [
+        {
+          text: 'Event',
+          //icon: 'calendar',
+          handler: () => {
+            this.onShowAddEventModal();
+          }
+        },
+        {
+          text: 'Reminder',
+          //icon: 'alert-circle',
+          handler: () => {
+            this.onShowAddReminderModal();
+          }
+        }, {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  async onShowAddEventModal() {
+    this.modalCtrl
+      .create({ component: AddEventComponent })
+      .then((modalEl) => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(async (resultData) => {
+        // console.log(resultData);
+        this.formData = resultData.data;
+        if (resultData.role === 'addWeight') {
+          let dogData = this.formData.value.dog;
+          const dogId = dogData.id;
+          const date = new Date(this.formData.value.date);
+          const weight = this.formData.value.weight;
+          // const name = dogData.name;
+          // const color = dogData.color;
+
+          const loading = await this.loadingCtrl.create({
+            message: 'Adding new weight record...'
+          });
+
+          this.dogsService.addWeightRecord(dogId, date, weight)
+            .then(() => { this.dogsService.updateWeights(dogId); })
+            .then(() => { loading.dismiss(); },
+              error => { console.error(error); }
+            );
+        }
+      });
+  }
+
+  async onShowAddReminderModal() {
+    console.log('add new reminder...');
+    this.modalCtrl
+      .create({ component: AddReminderComponent })
+      .then((modalEl) => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(async (resultData) => {
+        // console.log(resultData);
+        if (resultData.role === 'addReminder') {
+          this.formData = resultData.data;
+          console.log(this.formData.value);
+          console.log(this.formData.value.date);
+
+          // let dogData = this.formData.value.dog;
+          // const dogId = dogData.id;
+          const date = new Date(this.formData.value.date);
+          const weight = this.formData.value.weight;
+
+          const loading = await this.loadingCtrl.create({
+            message: 'Adding new reminder...'
+          });
+
+/*           this.dogsService.addWeightRecord(dogId, date, weight)
+            .then(() => { this.dogsService.updateWeights(dogId); })
+            .then(() => { loading.dismiss(); },
+              error => { console.error(error); }
+            ); */
+        }
+      });
   }
 
 }
