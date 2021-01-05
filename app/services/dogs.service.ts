@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { GeneralService } from './general.service';
 import { Event } from '../models/event.interface';
+import firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +32,13 @@ export class DogsService {
     this.dogsCollection = this.afStore.collection('dogs');
   }
 
-
   logOut(){
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
 
   addDog(dog: Dog){
+    const id = this.afStore.createId();
     dog.isRemoved = false;
     dog.colorText = this.defaultTextColor;
     dog.cssColor = this.defaultCssColor;
@@ -49,7 +50,13 @@ export class DogsService {
       if (color){ dog.cssColor = color.cssColor; }
     }
 
-    return this.dogsCollection.add(dog);
+    let age = moment().diff(dog.dob.toDate(), 'years');
+    this.addBirthday(id, 
+      moment(dog.dob.toDate()).add((age +1 ), 'years').toDate(),
+      this.generalService.capitalizeWords(dog.name) + '\'s ' + this.generalService.getOrdinal(age + 1) + ' Birthday',
+    ); 
+
+    return this.dogsCollection.doc(id).set(dog);
   }
 
   getDogs() {
@@ -87,17 +94,6 @@ export class DogsService {
     return this.afStore.doc('dogs/' + dogId).update(formData);
   }
 
-/*   updateWeightsColor(dogId: string, newColor: string){
-    this.afStore.collection('weights', ref => ref.where('dog', '==', dogId))
-    .valueChanges({ idField: 'id' }).pipe(takeUntil(this.unsubscribe)).subscribe(data => {
-      data.forEach(weight => {
-        this.afStore.doc('weights/' + weight.id).set({ borderColor: newColor }, { merge: true });
-      });
-      // if (data[0]) { this.afStore.doc('dogs/' + dogId).set({ currWeight: data[0] }, { merge: true }); }
-      // if (data[1]) { this.afStore.doc('dogs/' + dogId).set({ prevWeight: data[1] }, { merge: true }); }
-    });
-  } */
-
   async uploadImage(image: File, uid: string){
     const randomId = Math.random().toString(36).substring(2, 8);
     const filePath = `${uid}/dogs/${new Date().getTime()}_${randomId}`;
@@ -129,7 +125,7 @@ export class DogsService {
   addWeightRecord(dogId: string, date: Date, weight: number): Promise<void> {
     const uid = this.authService.getUserId();
     const id = this.afStore.createId();
-    this.afStore.collection('weights/').add({date, weight, uid, dog: dogId});
+    this.afStore.collection('weights/').doc(id).set({date, weight, uid, dog: dogId});
     return this.afStore.doc('dogs/' + dogId + '/weights/' + id).set({ date, weight });
   }
 
@@ -141,9 +137,30 @@ export class DogsService {
     });
   }
 
+  completeReminder(id: string){
+    return this.afStore.doc('events/' + id).set({ completed: true, dateCompleted: new Date() }, { merge: true });
+  }
+
+  undoCompleteReminder(id: string){
+    return this.afStore.doc('events/' + id).set({
+      completed: false,
+      dateCompleted: firebase.firestore.FieldValue.delete()
+    }, { merge: true });
+  }
+
   getUpcomingForDog(dogId: string){
     return this.afStore.collection<Event>('events', ref => ref.where('dogs', 'array-contains', dogId)
+    .where('date', '>=', moment().toDate())
     // .where('date', '<=', moment().add(12, 'months').toDate())
+    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
+  }
+
+  getOverdueRemindersForDog(dogId: string){
+    // const uid = this.authService.getUserId();
+    return this.afStore.collection<Event>('events', ref => ref.where('dogs', 'array-contains', dogId)
+    .where('completed', '==', false).where('date', '<', moment().toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );
@@ -151,9 +168,42 @@ export class DogsService {
 
   getEvents(){
     const uid = this.authService.getUserId();
-    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('date', '<=', moment().add(12, 'months').toDate())
+    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('date', '>=', moment().toDate()).where('date', '<=', moment().add(12, 'months').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );
+  }
+
+  getReminders(){
+    const uid = this.authService.getUserId();
+    return this.afStore.collection<Event>('reminders', ref => ref.where('uid', '==', uid).where('completed', '==', false)
+    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
+  }
+
+  getOverdueReminders(){
+    const uid = this.authService.getUserId();
+    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('completed', '==', false).where('date', '<', moment().toDate())
+    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
+      takeUntil(this.unsubscribe)
+    );
+  }
+
+  addBirthday(dogId: string, date: Date, title: string){
+    const uid = this.authService.getUserId();
+    const type = 'birthday';
+    const month = moment(date).format('MMMM');
+    // console.log(date, month, title, type, uid, [dogId]);
+    this.afStore.collection('events/').add({date, month, title, type, uid, dogs: [dogId]});
+  }
+
+  addReminder(dogs: string[], date: Date, title: string){
+    const uid = this.authService.getUserId();
+    const type = 'reminder';
+    const month = moment(date).format('MMMM');
+    const completed = false;
+    // console.log(date, month, title, type, uid, dogs);
+    return this.afStore.collection('reminders/').add({date, month, title, type, uid, dogs, completed});
   }
 }

@@ -3,6 +3,11 @@
     <ion-buttons slot="start">
       <ion-menu-button menu="leftMenu"></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="undoAction($event)" [hidden]="undoHidden">
+        <ion-icon name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Schedule</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -35,30 +40,18 @@
     <div [hidden]="type != 'reminders'" >
       <ion-grid class="ion-no-padding">
         <ion-row>
-          <ion-col>
-            <ion-list>
-              <ion-item-sliding *ngFor="let item of reminders">
-                <ion-item lines="full" class="ion-align-items-center" class="ion-align-items-start">
-                  <ion-checkbox></ion-checkbox>
-                  <ion-label>
-                    <h2>{{ item.title }}
-                      <span class="ion-margin-start" class="ion-hide-md-down">
-                        <ion-chip *ngFor="let chip of item.chips" [color]="chip.cssColor" class="dog-chip"><ion-label>{{ chip.letter }}</ion-label></ion-chip>
-                      </span>
-                      <span class="ion-margin-start" class="ion-hide-md-up">
-                        <fa-icon *ngFor="let color of item.colors" [icon]="['fas', 'circle']" [style.color]="color" style="margin:4px;"></fa-icon>
-                        <!-- <ion-icon *ngFor="let color of event.colors" name="ellipse" class="dogFlag" [style.color]="color" ></ion-icon> -->
-                      </span>
-                    </h2>
-                    <p>{{ item.date.toDate() | date: 'd/M/y' }}<span *ngIf="item.repeat">, {{ item.repeat }}</span></p>
-                  </ion-label>
-                  <ion-item-options side="end">
-                    <ion-item-option>Edit</ion-item-option>
-                    <ion-item-option color="danger">Remove</ion-item-option>
-                  </ion-item-options>
-                </ion-item>
-                <!-- <app-event-item [event]="item"></app-event-item> -->
-              </ion-item-sliding>
+          <ion-col size="12">
+            <ion-list *ngIf="overdueReminders && overdueReminders.length > 0">
+              <ion-item-divider>
+                <ion-label>Overdue Reminders</ion-label>
+              </ion-item-divider>
+              <app-reminder-item (reminderId)="updateUndoState($event)" [reminder]="item" *ngFor="let item of overdueReminders"></app-reminder-item>
+            </ion-list>
+            <ion-list *ngFor="let category of reminders| keyvalue">
+              <ion-item-divider>
+                <ion-label>{{ category.key }}</ion-label>
+              </ion-item-divider>
+              <app-reminder-item [reminder]="item" *ngFor="let item of category.value"></app-reminder-item>
             </ion-list>
           </ion-col>
         </ion-row>

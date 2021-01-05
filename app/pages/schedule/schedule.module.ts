@@ -14,6 +14,7 @@ import { AddEventComponent } from './add-event/add-event.component';
 import { AddReminderComponent } from './add-reminder/add-reminder.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DogPickerComponent } from 'src/app/shared/pickers/dog-picker/dog-picker.component';
+import { ReminderItemComponent } from './reminder-item/reminder-item.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { DogPickerComponent } from 'src/app/shared/pickers/dog-picker/dog-picker
     FontAwesomeModule,
     SharedModule
   ],
-  declarations: [SchedulePage, EventItemComponent, AddReminderComponent, AddEventComponent],
+  declarations: [SchedulePage, EventItemComponent, ReminderItemComponent, AddReminderComponent, AddEventComponent],
   entryComponents: [AddReminderComponent, AddEventComponent, DogPickerComponent]
 })
 export class SchedulePageModule {

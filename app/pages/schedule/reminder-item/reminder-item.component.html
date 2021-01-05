@@ -1,0 +1,31 @@
+<ion-item lines="full" class="ion-align-items-center" class="ion-align-items-start">
+  <ion-checkbox (ionChange)="completeReminder($event)" [value]="reminder.id"></ion-checkbox>
+  <ion-icon *ngIf="reminder.overdue" color="danger" name="alert" slot="end"></ion-icon>
+  <ion-label>
+    <ion-label *ngIf="reminder.overdue" color="danger"><h2>{{ reminder.title }}
+
+      <span class="ion-margin-start" class="ion-hide-md-down">
+        <ion-chip *ngFor="let chip of reminder.chips" [color]="chip.cssColor" class="dog-chip"><ion-label>{{ chip.letter }}</ion-label></ion-chip>
+      </span>
+      <span class="ion-margin-start" class="ion-hide-md-up">
+        <fa-icon *ngFor="let color of reminder.colors" [icon]="['fas', 'circle']" [style.color]="color" style="margin:4px;"></fa-icon>
+      </span>
+
+    </h2></ion-label>
+    <ion-label *ngIf="!reminder.overdue"><h2>{{ reminder.title }}
+
+    <span class="ion-margin-start" class="ion-hide-md-down">
+      <ion-chip *ngFor="let chip of reminder.chips" [color]="chip.cssColor" class="dog-chip"><ion-label>{{ chip.letter }}</ion-label></ion-chip>
+    </span>
+    <span class="ion-margin-start" class="ion-hide-md-up">
+      <fa-icon *ngFor="let color of reminder.colors" [icon]="['fas', 'circle']" [style.color]="color" style="margin:4px;"></fa-icon>
+    </span>
+
+    </h2></ion-label>
+    <p>{{ reminder.date.toDate() | date: 'd/M/y' }}<span *ngIf="reminder.repeat">, {{ reminder.repeat }}</span></p>
+  </ion-label>
+  <!-- <ion-item-options side="end">
+    <ion-item-option>Edit</ion-item-option>
+    <ion-item-option color="danger">Remove</ion-item-option>
+  </ion-item-options> -->
+</ion-item>

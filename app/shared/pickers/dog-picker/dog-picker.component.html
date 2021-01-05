@@ -5,7 +5,7 @@
   <ion-card-content class="ion-no-padding">
     <ion-grid>
       <ion-row>
-        <ion-col *ngFor="let dog of dogList; let i=index" size="4">
+        <ion-col *ngFor="let dog of dogList; let i=index" size="6" size-sm="4">
           <ion-item lines="none">
             <ion-label>{{ dog.name | titlecase }}</ion-label>
             <ion-checkbox slot="start" [value]="dog.id" [color]="dog.cssColor" [checked]="dog.checked" (ionChange)="onSelectionChange($event,i)"></ion-checkbox>

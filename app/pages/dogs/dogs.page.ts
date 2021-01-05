@@ -60,6 +60,7 @@ export class DogsPage implements OnInit {
           const loading = await this.loadingCtrl.create({
             message: 'Adding dog...'
           });
+          await loading.present();
 
           this.formData.value.dob = new Date(this.formData.value.dateOfBirth);
           let dog = this.formData.value;

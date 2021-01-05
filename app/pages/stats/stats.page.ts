@@ -88,6 +88,7 @@ export class StatsPage implements OnInit, OnDestroy {
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
+          await loading.present();
 
           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })

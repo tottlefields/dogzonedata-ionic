@@ -1,24 +1,39 @@
-<ion-card [routerLink]="['/app/dzd/dogs/health/', dog.id]" class="ion-margin" [color]="dog?.cssColor">
+<ion-card [routerLink]="['/app/dzd/schedule']" class="ion-margin" [color]="dog?.cssColor">
   <ion-card-header class="ion-padding">
-    <ion-card-title [color]="dog?.cssColor">Upcoming Dates</ion-card-title>
+    <ion-card-title [color]="dog?.cssColor">Upcoming Dates
+      <ion-icon name="calendar-outline" style="float:right"></ion-icon>
+    </ion-card-title>
   </ion-card-header>
   <ion-card-content class="ion-no-padding">
-    <ion-list *ngIf="diaryItems.length > 0; else elseBlock">
-      <ion-item lines="full" class="ion-align-items-center" *ngFor="let event of diaryItems">
-        <ion-icon *ngIf="event.type == 'event'" name="calendar-outline" slot="end"></ion-icon>
-        <!-- <ion-icon *ngIf="event.type == 'reminder'" name="alert-circle-outline" slot="end"></ion-icon> -->
-        <fa-icon  *ngIf="event.type == 'reminder'" [icon]="['fas', 'exclamation-circle']" slot="end"></fa-icon>
-        <fa-icon  *ngIf="event.type == 'birthday'" [icon]="['fas', 'birthday-cake']" slot="end"></fa-icon>
-        <div class="ion-text-center eventDate" slot="start">
-          <ion-text *ngIf="event.thisYear" color="secondary">{{ event.date.toDate() | date: 'd' }}<br /></ion-text>
-          <ion-text color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'MMM' }}<br /></ion-text>
-          <ion-text  *ngIf="!event.thisYear" color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'y' }}</ion-text>
-        </div>
-        <ion-label>
-          <h2>{{ event.title }}</h2>
-        </ion-label>
-      </ion-item>
-    </ion-list>
+      <ion-list *ngIf="overdueReminders && overdueReminders.length > 0" class="ion-no-padding">
+        <ion-item lines="full" class="ion-align-items-center" *ngFor="let event of overdueReminders">
+          <fa-icon [icon]="['fas', 'exclamation-circle']" class="fa-danger" slot="end"></fa-icon>
+          <div class="ion-text-center eventDate" slot="start">
+            <ion-text *ngIf="event.thisYear" color="secondary">{{ event.date.toDate() | date: 'd' }}<br /></ion-text>
+            <ion-text color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'MMM' }}<br /></ion-text>
+            <ion-text  *ngIf="!event.thisYear" color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'y' }}</ion-text>
+          </div>
+          <ion-label color="danger">
+            <h2>{{ event.title }}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-list *ngIf="diaryItems.length > 0; else elseBlock" class="ion-no-padding">
+        <ion-item lines="full" class="ion-align-items-center" *ngFor="let event of diaryItems">
+          <ion-icon *ngIf="event.type == 'event'" name="calendar-outline" slot="end"></ion-icon>
+          <!-- <ion-icon *ngIf="event.type == 'reminder'" name="alert-circle-outline" slot="end"></ion-icon> -->
+          <fa-icon  *ngIf="event.type == 'reminder'" [icon]="['fas', 'exclamation-circle']" slot="end"></fa-icon>
+          <fa-icon  *ngIf="event.type == 'birthday'" [icon]="['fas', 'birthday-cake']" slot="end"></fa-icon>
+          <div class="ion-text-center eventDate" slot="start">
+            <ion-text *ngIf="event.thisYear" color="secondary">{{ event.date.toDate() | date: 'd' }}<br /></ion-text>
+            <ion-text color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'MMM' }}<br /></ion-text>
+            <ion-text  *ngIf="!event.thisYear" color="secondary" class="ion-text-uppercase">{{ event.date.toDate() | date: 'y' }}</ion-text>
+          </div>
+          <ion-label>
+            <h2>{{ event.title }}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     <ng-template #elseBlock>
       <ion-item class="ion-text-center">
         <ion-label class="ion-text-wrap"><p>No future events or reminders currently set for {{ dog.name }}.</p></ion-label>

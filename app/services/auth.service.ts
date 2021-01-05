@@ -1,15 +1,13 @@
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ControlContainer } from '@angular/forms';
 import { Router } from '@angular/router';
-import { from, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 // import { auth } from 'firebase/app';
 // import 'firebase/auth';
 import firebase from 'firebase/app';
 import { takeUntil } from 'rxjs/operators';
-import { DogsService } from './dogs.service';
 
 export interface User {
   uid: string;

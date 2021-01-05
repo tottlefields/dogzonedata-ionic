@@ -29,7 +29,7 @@
     </ion-row>
   </ion-grid>
 
-  <app-dates-card [dog]="dog" [diaryItems]="diaryItems" class="ion-hide-md-up"></app-dates-card>
+  <app-dates-card [dog]="dog" [diaryItems]="diaryItems" [overdueReminders]="overdueReminders" class="ion-hide-md-up"></app-dates-card>
 
   <ion-grid class="ion-no-padding">
     <ion-row>
@@ -122,7 +122,7 @@
       </ion-col>
 
       <ion-col size="12" size-md="6">
-        <app-dates-card [dog]="dog" [diaryItems]="diaryItems" class="ion-hide-md-down"></app-dates-card>
+        <app-dates-card [dog]="dog" [diaryItems]="diaryItems" [overdueReminders]="overdueReminders" class="ion-hide-md-down"></app-dates-card>
 
         <ion-list>
           <ion-list-header>

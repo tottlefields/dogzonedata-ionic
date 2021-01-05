@@ -32,8 +32,11 @@ export class AddEventComponent implements OnInit {
   ngOnInit() {
 
     this.eventForm = new FormGroup({
-      title: new FormControl('', { updateOn: 'blur' }),
+      title: new FormControl('', { updateOn: 'blur', validators: [Validators.required] }),
+      location: new FormControl('', { updateOn: 'blur' } ),
       date: new FormControl(this.today.toISOString(), { updateOn: 'blur', validators: [Validators.required] }),
+      month: new FormControl(null),
+      year: new FormControl(null),
       dogsList: new FormArray([])
     });
 

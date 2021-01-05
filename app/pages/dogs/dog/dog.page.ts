@@ -13,6 +13,7 @@ import { AddWeightComponent } from '../../stats/add-weight/add-weight.component'
 import { NgForm } from '@angular/forms';
 import { AddReminderComponent } from '../../schedule/add-reminder/add-reminder.component';
 import { AddEventComponent } from '../../schedule/add-event/add-event.component';
+import { Reminder } from 'src/app/models/reminder.interface';
 
 @Component({
   selector: 'app-dog',
@@ -32,6 +33,7 @@ export class DogPage implements OnInit {
   genericPaw = '../../assets/img/generic-paw.png';
   formData: NgForm;
   diaryItems = [];
+  overdueReminders = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -81,13 +83,28 @@ export class DogPage implements OnInit {
             }
           }
         }
+
         if (this.dog.dob){
           this.birthDate = moment(this.dog.dob.toDate()).format("Do MMMM");
           this.age = moment().diff(this.dog.dob.toDate(), 'years');
+          /* this.dogsService.addBirthday(
+            this.dog.id, 
+            moment(this.dog.dob.toDate()).add((this.age +1 ), 'years').toDate(),
+            this.generalService.capitalizeWords(this.dog.name) + '\'s ' + this.generalService.getOrdinal(this.age + 1) + ' Birthday',
+            ); */
         }
         // console.log(this.dog);
       });
+
       
+      this.dogsService.getOverdueRemindersForDog(this.dog.id).subscribe(data => {
+        this.overdueReminders = [];
+        data.forEach((reminder: Reminder) => {
+          reminder.overdue = true;
+          this.overdueReminders.push(reminder);
+        });
+      });
+
       this.dogsService.getUpcomingForDog(this.dog.id).subscribe(data => {
         this.diaryItems = [];
         data.forEach(e => {
@@ -149,6 +166,7 @@ export class DogPage implements OnInit {
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
+          await loading.present();
 
           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
@@ -176,6 +194,7 @@ export class DogPage implements OnInit {
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
+          await loading.present();
 
 /*           this.dogsService.addWeightRecord(dogId, date, weight)
             .then(() => { this.dogsService.updateWeights(dogId); })
@@ -196,18 +215,19 @@ export class DogPage implements OnInit {
       .then(async (resultData) => {
         if (resultData.role === 'addReminder') {
           this.formData = resultData.data;
-          console.log(this.formData.value);
-
+          const date = new Date(this.formData.value.date);
+          const title = this.formData.value.title;
+          const dogs = this.formData.value.dogsList;
 
           const loading = await this.loadingCtrl.create({
-            message: 'Adding new weight record...'
+            message: 'Adding new reminder...'
           });
+          await loading.present();
 
-/*           this.dogsService.addWeightRecord(dogId, date, weight)
-            .then(() => { this.dogsService.updateWeights(dogId); })
-            .then(() => { loading.dismiss(); },
-              error => { console.error(error); }
-            ); */
+          this.dogsService.addReminder(dogs, date, title)
+          .then(() => { loading.dismiss(); },
+            error => { console.error(error); }
+          );
         }
       });
   }
