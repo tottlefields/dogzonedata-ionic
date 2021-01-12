@@ -12,4 +12,5 @@ export interface Reminder {
     chips?: any[];
     thisYear: boolean;
     overdue?: boolean;
+    originalDate?: any
 }

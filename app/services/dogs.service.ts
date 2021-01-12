@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { GeneralService } from './general.service';
 import { Event } from '../models/event.interface';
 import firebase from 'firebase/app';
+import { Reminder } from '../models/reminder.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -137,20 +138,9 @@ export class DogsService {
     });
   }
 
-  completeReminder(id: string){
-    return this.afStore.doc('events/' + id).set({ completed: true, dateCompleted: new Date() }, { merge: true });
-  }
-
-  undoCompleteReminder(id: string){
-    return this.afStore.doc('events/' + id).set({
-      completed: false,
-      dateCompleted: firebase.firestore.FieldValue.delete()
-    }, { merge: true });
-  }
-
   getUpcomingForDog(dogId: string){
     return this.afStore.collection<Event>('events', ref => ref.where('dogs', 'array-contains', dogId)
-    .where('date', '>=', moment().toDate())
+    .where('date', '>=', moment().startOf('day').toDate())
     // .where('date', '<=', moment().add(12, 'months').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
@@ -160,7 +150,7 @@ export class DogsService {
   getOverdueRemindersForDog(dogId: string){
     // const uid = this.authService.getUserId();
     return this.afStore.collection<Event>('events', ref => ref.where('dogs', 'array-contains', dogId)
-    .where('completed', '==', false).where('date', '<', moment().toDate())
+    .where('completed', '==', false).where('date', '<', moment().startOf('day').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );
@@ -168,15 +158,8 @@ export class DogsService {
 
   getEvents(){
     const uid = this.authService.getUserId();
-    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('date', '>=', moment().toDate()).where('date', '<=', moment().add(12, 'months').toDate())
-    .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
-      takeUntil(this.unsubscribe)
-    );
-  }
-
-  getReminders(){
-    const uid = this.authService.getUserId();
-    return this.afStore.collection<Event>('reminders', ref => ref.where('uid', '==', uid).where('completed', '==', false)
+    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid)
+    .where('date', '>=', moment().startOf('day').toDate()).where('date', '<=', moment().add(12, 'months').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );
@@ -184,7 +167,8 @@ export class DogsService {
 
   getOverdueReminders(){
     const uid = this.authService.getUserId();
-    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid).where('completed', '==', false).where('date', '<', moment().toDate())
+    return this.afStore.collection<Event>('events', ref => ref.where('uid', '==', uid)
+    .where('completed', '==', false).where('date', '<', moment().startOf('day').toDate())
     .orderBy('date')).valueChanges({ idField: 'id' }).pipe(
       takeUntil(this.unsubscribe)
     );
@@ -204,6 +188,30 @@ export class DogsService {
     const month = moment(date).format('MMMM');
     const completed = false;
     // console.log(date, month, title, type, uid, dogs);
-    return this.afStore.collection('reminders/').add({date, month, title, type, uid, dogs, completed});
+    return this.afStore.collection('events/').add({date, month, title, type, uid, dogs, completed});
+  }
+
+  getReminder(id: string): Observable<Reminder> {
+    return this.afStore.collection('events').doc<Reminder>(id).valueChanges().pipe(
+      take(1), takeUntil(this.unsubscribe), map(reminder => { return reminder; })
+    );
+  }
+
+  completeReminder(id: string, date: Date){
+    return this.afStore.doc('events/' + id).set({
+      completed: true,
+      dateCompleted: new Date(),
+      date: '',
+      originalDate: date
+    }, { merge: true });
+  }
+
+  undoCompleteReminder(id: string, date: Date){
+    return this.afStore.doc('events/' + id).set({
+      completed: false,
+      date: date,
+      dateCompleted: firebase.firestore.FieldValue.delete(),
+      originalDate: firebase.firestore.FieldValue.delete()
+    }, { merge: true });
   }
 }

@@ -26,6 +26,7 @@ export class SchedulePage implements OnInit {
   dogLookup = {};
   public dogs: any;
   formData: NgForm;
+  groupings = ['This Month', 'Next Month', 'This Year', 'Next Year'];
   // @ViewChild('dogPicker', { static: false }) dogPicker: DogPickerComponent;
 
   constructor(
@@ -76,20 +77,19 @@ export class SchedulePage implements OnInit {
             if (event.type == 'reminder'){ 
               if (moment(event.date.toDate()).isSame(new Date(), 'month')){ 
                 //true if dates are in the same month
-                if (!this.reminders['This Month']){ this.reminders['This Month'] = []; }
-                this.reminders['This Month'].push(event);
+                if (!this.reminders[0]){ this.reminders[0] = []; }
+                this.reminders[0].push(event);
               } else if ((moment(event.date.toDate()).subtract('1', 'months')).isSame(new Date(), 'month')){ 
                 //true if date is next month
-                if (!this.reminders['Next Month']){ this.reminders['Next Month'] = []; }
-                this.reminders['Next Month'].push(event);
+                if (!this.reminders[1]){ this.reminders[1] = []; }
+                this.reminders[1].push(event);
               } else if (moment(event.date.toDate()).isSame(new Date(), 'year')){ 
                 //true if dates are in the same year
-                if (!this.reminders['This Year']){ this.reminders['This Year'] = []; }
-                this.reminders['This Year'].push(event);
-              }
-              else {
-                if (!this.reminders['Next Year']){ this.reminders['Next Year'] = []; }
-                this.reminders['Next Year'].push(event);
+                if (!this.reminders[2]){ this.reminders[2] = []; }
+                this.reminders[2].push(event);
+              } else {
+                if (!this.reminders[3]){ this.reminders[3] = []; }
+                this.reminders[3].push(event);
               }
             } else {
               this.events.push(event); 
@@ -135,9 +135,10 @@ export class SchedulePage implements OnInit {
     event.colors = [];
     event.chips = [];
     event.dogs.forEach(dogId => {
-      if (!this.dogLookup[dogId].isRemoved){
+      if (this.dogLookup[dogId] && !this.dogLookup[dogId].isRemoved){
         event.colors.push(this.dogLookup[dogId].color)
         event.chips.push({
+          id: dogId,
           label: this.dogLookup[dogId].label, 
           letter: this.dogLookup[dogId].label.substring(0,1), 
           cssColor: this.dogLookup[dogId].cssColor 
@@ -151,11 +152,17 @@ export class SchedulePage implements OnInit {
     if (this.type == 'calendar'){ this.undoHidden = true; }
   }
 
-  undoAction(event){
-    // console.log(this.lastReminder);
-    this.dogsService.undoCompleteReminder(this.lastReminder);
-    this.lastReminder = '';
-    this.undoHidden = true;
+  undoAction(){
+    if (this.lastReminder){
+      this.dogsService.getReminder(this.lastReminder).subscribe(
+        data => {
+          this.dogsService.undoCompleteReminder(this.lastReminder, data.originalDate);
+          this.lastReminder = '';
+          this.undoHidden = true;
+        });
+    } else{
+      console.log('No last reminder ID set...');
+    }
   }
 
   updateUndoState(event){
@@ -250,6 +257,8 @@ export class SchedulePage implements OnInit {
           const date = new Date(this.formData.value.date);
           const title = this.formData.value.title;
           const dogs = this.formData.value.dogsList;
+
+          date.setHours(0,0,0,0);
 
           const loading = await this.loadingCtrl.create({
             message: 'Adding new reminder...'

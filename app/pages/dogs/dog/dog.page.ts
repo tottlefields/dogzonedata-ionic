@@ -191,6 +191,10 @@ export class DogPage implements OnInit {
           console.log(this.formData.value);
           console.log(this.formData.value.date);
 
+          const date = new Date(this.formData.value.date);
+
+          date.setHours(0,0,0,0);
+
           const loading = await this.loadingCtrl.create({
             message: 'Adding new weight record...'
           });
@@ -219,6 +223,8 @@ export class DogPage implements OnInit {
           const title = this.formData.value.title;
           const dogs = this.formData.value.dogsList;
 
+          date.setHours(0,0,0,0);
+
           const loading = await this.loadingCtrl.create({
             message: 'Adding new reminder...'
           });
@@ -230,6 +236,10 @@ export class DogPage implements OnInit {
           );
         }
       });
+  }
+
+  async onShowAddNoteModal() {
+    console.log('adding note....');
   }
 
 }

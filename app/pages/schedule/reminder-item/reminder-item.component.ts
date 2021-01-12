@@ -28,10 +28,14 @@ export class ReminderItemComponent implements OnInit {
       // loading.dismiss();
       this.reminderId.emit(event.detail.value);
 
-      this.dogsService.completeReminder(event.detail.value).then(
-        () => { loading.dismiss(); },
-        error => { console.log(error); }
-      ); 
+      this.dogsService.getReminder(event.detail.value).subscribe(
+        data => {
+          this.dogsService.completeReminder(event.detail.value, data.date).then(
+            () => { loading.dismiss(); },
+            error => { console.log(error); }
+            ); 
+        }
+      );
     }
   }
 
